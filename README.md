@@ -1,2 +1,2 @@
 # onRoute
-This is a temporay repository for storing simuli
+This is the folder for the on Route expeirment, it include stimuli and the experiment script
