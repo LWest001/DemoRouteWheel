@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+    <head>
+        <title>Experiment - scene category</title>
+        <style>
+            #basic_arena {
+                position: relative;
+                margin: auto;              
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 1024px;
+                height: 768px;                
+                display: flex;
+                align-items: center;                
+                /* border: 1px solid grey; */
+            }                                   
+            #full_arena {   
+                position: absolute;                           
+                width: 100%;
+                height: 100%;
+                display: flex; 
+                align-items: center;
+                justify-content: center;                                      
+            }
+        </style>
+        
+        <script src='js_library/jspsych-6.1.0/jspsych.js'></script>        
+        <script src="js_library/jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+        <script src='js_library/jspsych-6.1.0/plugins/jspsych-instructions.js'></script>
+        <script src='js_library/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js'></script>       
+        <script src='js_library/jspsych-6.1.0/plugins/jspsych-html-button-response.js'></script>        
+        <script src='js_library/jspsych-6.1.0/plugins/jspsych-mouse-reconstruction.js'></script> 
+        <script src="js_library/underscore-min.js"></script>       
+        <script src="make_condition.js"></script>           
+        <link href='js_library/jspsych-6.1.0/css/jspsych.css' rel='stylesheet' type="text/css">        
+    </head>
+    <body></body>
+
+    <script>
+
+        // * image host * //
+        var img_host = 'https://macklab.dev/resources/sceneWheel/validation_5radii/';
+
+        // * wheel info * //    
+        var prac_wheel = '01';    
+        var main_wheel = '01';        
+        // var radius_pool =   
+
+        // * condition set up * //        
+        var radius = ['02','04','08','16','32'];      
+        var n_bin_onWheel = 18;
+        var n_repetition = 3;
+        var n_block = 5;    
+        var p_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, prac_wheel);
+        var p_mat = p_mat[0].slice(0,10); // only 10 trials for practicing
+        var e_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, main_wheel);
+    
+        
+        //* preload stimuli *//       
+        var scenes = [];
+        for (i = 0; i < e_mat.length; i++) {            
+            scenes.push(e_mat[i].img_path);
+        }
+        for (i = 0; i < 10; i++) {      
+            scenes.push(p_mat[i].img_path);
+        }
+        var handle_bar = 'stimuli/handle_wheel.png';
+        var handle_nobar = 'stimuli/noBar_wheel.png';
+        var inst_img = [];
+        for (i=1; i<=5; i++){
+            inst_img.push('stimuli/instruction/Slide'+(i)+'.jpeg');
+        }        
+         
+
+        // ********** displays ********** //
+        // * consent form * //
+        var consent_page = {
+            type: 'html-button-response',
+            stimulus: function(){                            
+                var html = 
+                '<p area-selected="font-size:15px;"> Press Agree to participate in the experiment.</p>'+                          
+                '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
+                return html;
+            },
+            choices: ['Agree'],        
+            data: {disp_type: 'consent_page'}   
+
+        }
+        // * instructions * //
+        var general_instruction = {
+            type: 'instructions',
+            pages: [
+                '<img src="'+inst_img[0]+'" style="width:90%">',
+                '<img src="'+inst_img[1]+'" style="width:90%">',
+                '<img src="'+inst_img[2]+'" style="width:90%">',
+                '<img src="'+inst_img[3]+'" style="width:90%">',
+                '<img src="'+inst_img[4]+'" style="width:90%">'
+            ],
+            show_clickable_nav: true,
+            show_page_number: true,
+            data: {disp_type: 'general_instruction'}
+        }   
+
+        
+        // * delayted estimation task * //        
+        var fixation = { 
+            type: 'html-keyboard-response',
+            stimulus: html='<div id="basic_arena"><div id="full_arena" style="font-size:24px;">+</div></div>',
+            choices: jsPsych.NO_KEYS,
+            trial_duration: 1000,
+            data: {disp_type: 'fixation'}
+        }
+        var target_display = {
+            type: 'html-keyboard-response',
+            stimulus: function(){
+                var html='<div id="basic_arena"><div id="full_arena""><img src="'+
+                    jsPsych.timelineVariable('img_path', true)+' "></div></div>';
+                    return html;
+                },   
+            choices: jsPsych.NO_KEYS,
+            trial_duration: 1000,
+            data: {disp_type: 'test_target'}
+        }
+        var adjustment_display = {
+            type: 'mouse-reconstruction',
+            div_name: 'full_arena',            
+            starting_value: 360, // grey rectangular (I put grey image as 360.webp in each wheel path)
+            wheel_path: jsPsych.timelineVariable('wheel_path'),
+            image_size: 'height: 256px',
+            indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
+            indicator_size: 'height: 450px',  
+            wait_fix: 1000,          
+            data: {
+                disp_type: 'test-adjustment',
+                answer: jsPsych.timelineVariable('scene_num')
+            }            
+        }
+        
+        // ******* timeline components ******* // 
+        // practice      
+        var memory_prac = {
+            timeline: [fixation, target_display, adjustment_display],
+            timeline_variables: p_mat,
+            randomize_order: true
+        }
+        // prac2main
+        var prac2main = {
+            type: 'html-button-response',
+            stimulus: html = '<p style="color: black; font-size: 20px;">'
+                +'Practice trials are done!</br>'
+                +'Click the <i>Start</i> button to start the main experiment.</br></br>'
+                +'The main experiment consists of '+(radius.length*n_bin_onWheel*n_repetition) +' trials.</br>'
+                +'A short break will be given every '+(radius.length*n_bin_onWheel*n_repetition/n_block) + ' trials.',
+            choices: ['Start'],                  
+            data: {disp_type: 'start-mainExp'}
+        }
+        // main        
+        for(b=0; b<n_block; b++){
+            this['memory_main'+(b+1)] = {
+                timeline: [fixation, target_display, adjustment_display],
+                timeline_variables: e_mat[b],
+                randomize_order: true
+            }
+        }   
+        for(b=0; b<n_block; b++){           
+            this['main_block_end'+(b+1)] = {                
+                type: 'html-button-response',
+                stimulus: '<div style="font-size:20px;">Block '+(b+1)+' is done!<br>'+
+                    'Take a break and press the button to proceed.</div>',                    
+                choices: ['start'],
+                data: {disp_type: 'prac_block_done'}
+            }                      
+        } 
+
+        
+        // * save data * //
+        var save_data = {
+            type: 'html-keyboard-response',
+            stimulus: '<p>We are saving your data, please stay on this page.</p>',
+            choices: jsPsych.NO_KEYS,
+            trial_duration: 3000,
+            data: { // create confirmation code with data saving
+                conf_code: Math.floor(1000 + Math.random() * 9000)
+            },            
+            on_finish: function(){                
+                // get data values
+                var data = {experiment:"sceneWheel_categoryLearning_200ms",
+                            repo:"sceneWheel_categoryLearning_200ms",                          
+                            data:jsPsych.data.get().values(),
+                            radius: radius,
+                            interaction_data:jsPsych.data.getInteractionData().values(),
+                            exp_condition:e_mat,
+                            current_url: window.location.href}
+
+                // send data to savejs
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST','https://macklab-savejs.netlify.app/api/savejs');
+                xhr.setRequestHeader('Content-Type','application/json');
+                xhr.onload = function(){
+                  if(xhr.status==200){
+                    var response=JSON.parse(xhr.responseText);
+                    console.log(response.success);
+                  }
+                };
+                xhr.send(JSON.stringify(data));                                
+            }           
+        }
+             
+        // demographic page
+        var demographic_page = {
+            type: 'html-button-response',
+            stimulus: html='<p style="color: black; font-size: 20px;">'
+                +'You are done! Now we would like to collect your demographic information.</br>'
+                +'Click the <b>Demographic questions</b> below to complete the form.</br>'                
+                +'After submitting the form, come back to this page and check out the debriefing letter!</br></br>'
+                +'<a href="https://redcap.utoronto.ca/surveys/index.php?s=DDT8ME9KFL&study_name=scene_wheel_category_learning_200ms" target="_blank">'
+                +'Demographic questions </a></br></br></p>',
+            choices: ['Go to the debriefing letter'], 
+            data: {disp_type: 'demographic-link'}        
+        }
+
+        // debriefing letter
+        var debrief_page = {
+            type: 'html-keyboard-response',
+            stimulus: function(){                            
+                var html = 
+                '<p area-selected="font-size:15px;"> Thank you for participating! </br> Once checking the defriefing letter and questions, you can leave this page.</p>'+                          
+                '<embed src="stimuli/debriefing.pdf" style="width:80vw; height:70vh;"></embed>'
+                return html;
+            },
+            choices: jsPsych.NO_KEYS,        
+            data: {disp_type: 'debriefing_page'}            
+        } 
+
+        // ********** timeline fill up ********** // 
+        timeline = [];
+        timeline.push(consent_page);
+        timeline.push({
+            type: 'fullscreen',
+            fullscreen_mode: true
+        });
+        timeline.push(general_instruction);
+        timeline.push(memory_prac);     
+        timeline.push(prac2main);
+        for (b=0; b<1; b++) {            
+            timeline.push(eval('memory_main'+(b+1)));           
+            timeline.push(eval('main_block_end'+(b+1)));
+        }
+        timeline.push(save_data);
+        timeline.push(demographic_page);
+        timeline.push({
+            type: 'fullscreen',
+            fullscreen_mode: false
+        });
+        timeline.push(debrief_page);
+        
+
+        // ****** Start ***** //
+        jsPsych.init({
+            timeline: timeline,
+            preload_images: [scenes, inst_img, handle_bar, handle_nobar]    
+        });          
+
+
+        
+    </script>
+</html>
