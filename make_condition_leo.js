@@ -31,8 +31,9 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
                     radius: radius[r],
                     scene_num: ('00000'+(bin_startPoint[b]+shuffled_jitter[rp])).slice(-6).toString(),
                     wheel_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/', 
-                    img_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/'+
-                            ('00000'+(bin_startPoint[b]+shuffled_jitter[rp])).slice(-6)+'.webp'                 
+                    img_path: img_host+"/ISC/"+('00000'+(bin_startPoint[b]+shuffled_jitter[rp])).slice(-6)+'.jpg'
+                    // img_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/'+
+                    //         ('00000'+(bin_startPoint[b]+shuffled_jitter[rp])).slice(-6)+'.webp'                         
                 })
             }
             
