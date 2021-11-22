@@ -102,7 +102,8 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
     var images = []
     for (i = 0; i < 361; i++) {
       images.push(
-        wheel_path+("000000"+i).slice(-6)+'.webp'
+        'ISC/'+("000000"+i).slice(-6)+'.jpg' // Change to the ISC folder, by Bill on 11/22/2021
+        //wheel_path+("000000"+i).slice(-6)+'.webp'
       );                          
     }
     jsPsych.pluginAPI.preloadImages(images, wait_fix)
@@ -138,8 +139,9 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
         // var html = trial.stim_function(param, wsp); // <- this is for when stimuli are drawn outside this plugin
         sceneNum = ("000000" + param).slice(-6);                                           
-        var html = '<div id="basic_arena"><div id="'+trial.div_name+'">'+                      
-            '<img src="'+wheel_path+sceneNum+'.webp" style="'+trial.image_size+'"></div>'+  // scene      
+        var html = '<div id="basic_arena"><div id="'+trial.div_name+'">'+      
+            '<img src="ISC/'+sceneNum+'.jpg" style="'+trial.image_size+'"></div>'+  // change the image path by Bill 11/22/2021         
+            //'<img src="'+wheel_path+sceneNum+'.webp" style="'+trial.image_size+'"></div>'+  // scene      
             '<div id="'+trial.div_name+'"><img src="'+indicator+'" '+                       // indicator
             'style="'+trial.indicator_size+'; transform: rotate('+(param+wsp)+'deg)"></div>'+
             '<div id="'+trial.cue_div_name+'">'+                                            // cue
