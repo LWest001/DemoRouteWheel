@@ -102,7 +102,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
     var images = []
     for (i = 0; i < 361; i++) {
       images.push(
-        'ISC/'+("000000"+i).slice(-6)+'.jpg' // Change to the ISC folder, by Bill on 11/22/2021
+        wheel_path+("000000"+i).slice(-6)+'.jpg' // Change to back to wheel path, by Bill on 11/23/2021
         //wheel_path+("000000"+i).slice(-6)+'.webp'
       );                          
     }
