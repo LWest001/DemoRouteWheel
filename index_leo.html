@@ -128,7 +128,7 @@
             return html;
         },
         choices: jsPsych.NO_KEYS,
-        trial_duration: 500,
+        trial_duration: 500, // change duration from 1000 to 500 by Leo 12/3/2021
         data: {
             disp_type: 'test_target'
         }
@@ -140,7 +140,7 @@
         wheel_path: jsPsych.timelineVariable('wheel_path'),
         image_size: 'height: 256px',
         indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
-        indicator_size: 'height: 570px',
+        indicator_size: 'height: 570px',// change the size from 450 to 570 by Leo 12/3/2021
         wait_fix: 1000,
         data: {
             disp_type: 'test-adjustment',
@@ -256,13 +256,13 @@
 
     // ********** timeline fill up ********** // 
     timeline = [];
-    //timeline.push(consent_page);
+    //timeline.push(consent_page);// temporay remove by Leo 12/3/2021
     timeline.push({
         type: 'fullscreen',
         fullscreen_mode: true
     });
-    //timeline.push(general_instruction);
-    //timeline.push(memory_prac);
+    //timeline.push(general_instruction);// temporay remove by Leo 12/3/2021
+    //timeline.push(memory_prac);// temporay remove by Leo 12/3/2021
     timeline.push(prac2main);
     for (b = 0; b < 1; b++) {
         timeline.push(eval('memory_main' + (b + 1)));

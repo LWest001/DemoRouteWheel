@@ -30,9 +30,9 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
                 basic_condition.push({
                     radius: radius[r],
                     scene_num: ('00000' + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6).toString(),
-                    wheel_path: img_host + "ISC2/", //Wheel path is the whole folder, so it can the image can change base on the mouse, by Bill 11/23/2021
+                    wheel_path: img_host + "ISC2/", //Wheel path is the whole folder, so it the image can change base on the mouse, by Bill 11/23/2021 // change to IS2 by Leo 12/2/2021
                     //wheel_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/', //Wheel path 
-                    img_path: img_host + "ISC2/" + ('00000' + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6) + '.jpg' // img_path is the image for the target, change it to ISC2, by Bill 11/23/2021
+                    img_path: img_host + "ISC2/" + ('00000' + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6) + '.jpg' // img_path is the image for the target, change it to ISC, by Bill 11/23/2021// change to IS2 by Leo 12/2/2021
                         // img_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/'+
                         //         ('00000'+(bin_startPoint[b]+shuffled_jitter[rp])).slice(-6)+'.webp'                         
                 })
