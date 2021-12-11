@@ -78,8 +78,10 @@
   var animation_trial = {
     type: jsPsychAnimation,
     stimuli: basic_condition[0].target_series,
-    sequence_reps: 3,
+    frame_isi: 100,
+    sequence_reps: 1,
     frame_time: 300,
+    render_on_canvas:false,
     prompt: '<p style="margin-top:0px;">Watch the faces.</p>'
   };
 
