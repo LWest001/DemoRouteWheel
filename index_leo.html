@@ -5,9 +5,11 @@
     <title>Experiment - on Route </title>
     <style>
         #jspsych-animation-image {
-             /* add in the style for the animation by Bill 12/11/2021 */
-            height:100% !important; 
-            width: 100% !important;}
+            /* add in the style for the animation by Bill 12/11/2021 */
+            height: 100% !important;
+            width: 100% !important;
+        }
+        
         #basic_arena {
             position: relative;
             margin: auto;
@@ -69,11 +71,11 @@
     //* preload stimuli *//       
     var scenes = [];
     for (i = 0; i < e_mat.length; i++) {
-        scenes.push(e_mat[i].target_series);//change the preload to the series not the single one by by Bill 11/12/2021
+        scenes.push(e_mat[i].target_series); //change the preload to the series not the single one by by Bill 11/12/2021
         //scenes.push(e_mat[i].img_path);
     }
     for (i = 0; i < 10; i++) {
-        scenes.push(p_mat[i].target_series);//change the preload to the series not the single one by by Bill 11/12/2021
+        scenes.push(p_mat[i].target_series); //change the preload to the series not the single one by by Bill 11/12/2021
         //scenes.push(p_mat[i].img_path);
     }
     var handle_bar = 'stimuli/handle_wheel.png';
@@ -120,40 +122,40 @@
 
     // * delayted estimation task * //        
     var fixation = {
-        type: 'html-keyboard-response',
-        stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;">+</div></div>',
-        choices: jsPsych.NO_KEYS,
-        trial_duration: 1000,
-        data: {
-            disp_type: 'fixation'
+            type: 'html-keyboard-response',
+            stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;">+</div></div>',
+            choices: jsPsych.NO_KEYS,
+            trial_duration: 1000,
+            data: {
+                disp_type: 'fixation'
+            }
         }
-    }
-    // change the target disply to animination, and chagne it to a series instead of a single picture by Bill 11/12/2021
+        // change the target disply to animination, and chagne it to a series instead of a single picture by Bill 11/12/2021
     var target_display = {
-        type: "animation",
-        //change it to "stimuli" from "stimulus" to accomodate for difference in the plugin
-        stimuli: jsPsych.timelineVariable('target_series'),
-        choices: jsPsych.NO_KEYS,
-        sequence_reps: 1,
-        frame_time: 300,
-        render_on_canvas:false,
-        data: {
-            disp_type: 'test_target'
+            type: "animation",
+            //change it to "stimuli" from "stimulus" to accomodate for difference in the plugin
+            stimuli: jsPsych.timelineVariable('target_series'),
+            choices: jsPsych.NO_KEYS,
+            sequence_reps: 1,
+            frame_time: 300,
+            render_on_canvas: false,
+            data: {
+                disp_type: 'test_target'
+            }
         }
-    }
-    // var target_display = {
-    //     type: 'html-keyboard-response',
-    //     stimulus: function() {
-    //         var html = '<div id="basic_arena"><div id="full_arena""><img src="' +
-    //             jsPsych.timelineVariable('img_path', true) + ' "></div></div>';
-    //         return html;
-    //     },
-    //     choices: jsPsych.NO_KEYS,
-    //     trial_duration: 500, // change duration from 1000 to 500 by Leo 12/3/2021
-    //     data: {
-    //         disp_type: 'test_target'
-    //     }
-    // }
+        // var target_display = {
+        //     type: 'html-keyboard-response',
+        //     stimulus: function() {
+        //         var html = '<div id="basic_arena"><div id="full_arena""><img src="' +
+        //             jsPsych.timelineVariable('img_path', true) + ' "></div></div>';
+        //         return html;
+        //     },
+        //     choices: jsPsych.NO_KEYS,
+        //     trial_duration: 500, // change duration from 1000 to 500 by Leo 12/3/2021
+        //     data: {
+        //         disp_type: 'test_target'
+        //     }
+        // }
 
     var adjustment_display = {
         type: 'mouse-reconstruction',
@@ -162,7 +164,7 @@
         wheel_path: jsPsych.timelineVariable('wheel_path'),
         image_size: 'height: 256px',
         indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
-        indicator_size: 'height: 570px',// change the size from 450 to 570 by Leo 12/3/2021
+        indicator_size: 'height: 570px', // change the size from 450 to 570 by Leo 12/3/2021
         wait_fix: 1000,
         data: {
             disp_type: 'test-adjustment',
@@ -278,22 +280,13 @@
 
     // ********** timeline fill up ********** // 
     timeline = [];
-<<<<<<< Updated upstream
-    //timeline.push(consent_page);// temporay remove by Leo 12/3/2021
-=======
     timeline.push(consent_page);
->>>>>>> Stashed changes
     timeline.push({
         type: 'fullscreen',
         fullscreen_mode: true
     });
-<<<<<<< Updated upstream
-    //timeline.push(general_instruction);// temporay remove by Leo 12/3/2021
-    //timeline.push(memory_prac);// temporay remove by Leo 12/3/2021
-=======
     timeline.push(general_instruction);
     timeline.push(memory_prac);
->>>>>>> Stashed changes
     timeline.push(prac2main);
     for (b = 0; b < 1; b++) {
         timeline.push(eval('memory_main' + (b + 1)));
