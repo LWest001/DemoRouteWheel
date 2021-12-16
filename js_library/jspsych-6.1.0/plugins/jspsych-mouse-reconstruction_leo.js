@@ -79,6 +79,20 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 default: [],
                 description: 'Size of a cue image in html style format (eg. width: xx%).'
             },
+            //Add in trial duration and response_ends_trial Leo 12/16/21
+            trial_duration: {
+                type: jsPsych.plugins.parameterType.INT,
+                pretty_name: 'Trial duration',
+                default: null,
+                description: 'How long to show trial before it ends.'
+            },
+            response_ends_trial: {
+                type: jsPsych.plugins.parameterType.BOOL,
+                pretty_name: 'Response ends trial',
+                default: true,
+                description: 'If true, trial will end when subject makes a response.'
+            },
+            //end add Leo 12/16/21
             cue_div_name: {
                 type: jsPsych.plugins.parameterType.STRING,
                 pretty_name: 'DIV that contains wheel',
@@ -198,6 +212,13 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             var container_centerX = rect.left + rect.width / 2;
             var container_centerY = rect.top + rect.height / 2;
 
+        }
+
+        // end trial if trial_duration is set
+        if (trial.trial_duration !== null) {
+            jsPsych.pluginAPI.setTimeout(function() {
+                end_trial();
+            }, trial.trial_duration);
         }
 
     };
