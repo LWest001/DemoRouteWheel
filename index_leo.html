@@ -170,8 +170,11 @@
             stimulus: html = '<p style="color: black; font-size: 20px;">' +
                 'Practice trials are done!</br>' +
                 'Click the <i>Start</i> button to start the main experiment.</br></br>' +
-                'The main experiment consists of ' + (radius.length * n_bin_onWheel * n_repetition) + ' trials.</br>' +
-                'A short break will be given every ' + (radius.length * n_bin_onWheel * n_repetition / n_block) + ' trials.',
+                //Change to say just 54 trials for the pilot Leo Westebbe 12/17/2021
+                'The main experiment consists of 54 trials.</br>' +
+                'Then, the experiment will be complete.',
+            //'The main experiment consists of ' + (radius.length * n_bin_onWheel * n_repetition) + ' trials.</br>' +
+            //'A short break will be given every ' + (radius.length * n_bin_onWheel * n_repetition / n_block) + ' trials.',
             choices: ['Start'],
             data: {
                 disp_type: 'start-mainExp'
@@ -188,9 +191,12 @@
     for (b = 0; b < n_block; b++) {
         this['main_block_end' + (b + 1)] = {
             type: 'html-button-response',
-            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
-                'Take a break and press the button to proceed.</div>',
-            choices: ['start'],
+            stimulus: '<div style="font-size:20px;">Experiment block is done!<br>' +
+                'Press the button to proceed.</div>',
+            //end experiment here.
+            //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+            //    'Take a break and press the button to proceed.</div>',
+            choices: ['Save data'],
             data: {
                 disp_type: 'prac_block_done'
             }
@@ -236,13 +242,15 @@
     // demographic page
     var demographic_page = {
         type: 'html-button-response',
+        //remove demographic page Leo Westebbe 12/17/2021
         stimulus: html = '<p style="color: black; font-size: 20px;">' +
-            'You are done! Now we would like to collect your demographic information.</br>' +
-            'Click the <b>Demographic questions</b> below to complete the form.</br>' +
-            'After submitting the form, come back to this page and check out the debriefing letter!</br></br>' +
-            '<a href="https://redcap.utoronto.ca/surveys/index.php?s=DDT8ME9KFL&study_name=scene_wheel_category_learning_200ms" target="_blank">' +
-            'Demographic questions </a></br></br></p>',
-        choices: ['Go to the debriefing letter'],
+            'You are done! You may now close the browser.</br>',
+        //'You are done! Now we would like to collect your demographic information.</br>' +
+        //'Click the <b>Demographic questions</b> below to complete the form.</br>' +
+        //'After submitting the form, come back to this page and check out the debriefing letter!</br></br>' +
+        //'<a href="https://redcap.utoronto.ca/surveys/index.php?s=DDT8ME9KFL&study_name=scene_wheel_category_learning_200ms" target="_blank">' +
+        //'Demographic questions </a></br></br></p>',
+        //choices: ['Go to the debriefing letter'],
         data: {
             disp_type: 'demographic-link'
         }
@@ -278,13 +286,18 @@
         timeline.push(eval('main_block_end' + (b + 1)));
     }
     timeline.push(save_data);
-    timeline.push(demographic_page);
+    //end fullscreen after saving data Leo Westebbe 12/17/2021
     timeline.push({
         type: 'fullscreen',
         fullscreen_mode: false
     });
-    timeline.push(debrief_page);
-
+    timeline.push(demographic_page);
+    //Comment out debrief page Leo Westebbe 12/17/2021
+    //timeline.push(debrief_page);
+    //timeline.push({
+    //    type: 'fullscreen',
+    //    fullscreen_mode: false
+    //});
 
     // ****** Start ***** //
     jsPsych.init({
