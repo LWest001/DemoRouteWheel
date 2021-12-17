@@ -79,7 +79,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 default: [],
                 description: 'Size of a cue image in html style format (eg. width: xx%).'
             },
-            //Add in trial duration and response_ends_trial Leo 12/16/21
+            //Add in trial duration and response_ends_trial Leo Westebbe 12/16/21
             trial_duration: {
                 type: jsPsych.plugins.parameterType.INT,
                 pretty_name: 'Trial duration',
@@ -213,7 +213,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             var container_centerY = rect.top + rect.height / 2;
 
         }
-
+        //add in trial_duration Leo Westebbe 12/16/2021
         // end trial if trial_duration is set
         if (trial.trial_duration !== null) {
             jsPsych.pluginAPI.setTimeout(function() {
