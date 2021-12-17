@@ -213,6 +213,33 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             var container_centerY = rect.top + rect.height / 2;
 
         }
+
+        
+        // add in the function to end trial when it is time by Bill 12/12/2021
+        function end_trial () {
+
+            // kill any remaining setTimeout handlers
+            jsPsych.pluginAPI.clearAllTimeouts();
+    
+            // kill keyboard listeners
+            if (typeof keyboardListener !== 'undefined') {
+            jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+            }
+    
+            // gather the data to store for the trial
+            var trial_data = {
+                "fix_duration": "NaN ",
+                "rt": "NaN ",
+                "response": "NaN "
+            };
+    
+            // clear the display
+            display_element.innerHTML = '';
+    
+            // move on to the next trial
+            jsPsych.finishTrial(trial_data);
+        };
+    
         //add in trial_duration Leo Westebbe 12/16/2021
         // end trial if trial_duration is set
         if (trial.trial_duration !== null) {
