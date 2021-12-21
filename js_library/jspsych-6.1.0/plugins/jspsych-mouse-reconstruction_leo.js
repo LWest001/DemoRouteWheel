@@ -183,24 +183,51 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
             // Finish trial
             var mouseclickevent = function() {
-                document.removeEventListener('mousemove', mousemovementevent);
-                var end_time = performance.now();
-                var response_time = end_time - start_time;
-                var final_angle = param;
-                // save data
-                var trial_data = {
-                    "fix_duration": start_time - fixstart,
-                    "rt": response_time,
-                    "response": final_angle
-                };
-                display_element.innerHTML = "";
+                    document.removeEventListener('mousemove', mousemovementevent);
+                    var end_time = performance.now();
+                    var response_time = end_time - start_time;
+                    var final_angle = param;
+                    // save data
+                    var trial_data = {
+                        "fix_duration": start_time - fixstart,
+                        "rt": response_time,
+                        "response": final_angle
+                    };
+                    display_element.innerHTML = "";
 
+                    document.removeEventListener("click", mouseclickevent);
+
+                    // next trial
+                    jsPsych.finishTrial(trial_data);
+
+                }
+                // add in the function to end trial when it is time by Bill 12/12/2021
+            function end_trial() {
+
+                // kill any remaining setTimeout handlers
+                jsPsych.pluginAPI.clearAllTimeouts();
+
+                // kill keyboard listeners
+                if (typeof keyboardListener !== 'undefined') {
+                    jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+                }
+                // kill mouse listeners
+                document.removeEventListener('mousemove', mousemovementevent);
                 document.removeEventListener("click", mouseclickevent);
 
-                // next trial
-                jsPsych.finishTrial(trial_data);
+                // gather the data to store for the trial
+                var trial_data = {
+                    "fix_duration": "NaN ",
+                    "rt": "NaN ",
+                    "response": "NaN "
+                };
 
-            }
+                // clear the display
+                display_element.innerHTML = '';
+
+                // move on to the next trial
+                jsPsych.finishTrial(trial_data);
+            };
             document.addEventListener("click", mouseclickevent);
 
             // initial draw
@@ -212,41 +239,19 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             var container_centerX = rect.left + rect.width / 2;
             var container_centerY = rect.top + rect.height / 2;
 
-        }
-
-        
-        // add in the function to end trial when it is time by Bill 12/12/2021
-        function end_trial () {
-
-            // kill any remaining setTimeout handlers
-            jsPsych.pluginAPI.clearAllTimeouts();
-    
-            // kill keyboard listeners
-            if (typeof keyboardListener !== 'undefined') {
-            jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+            //add in trial_duration Leo Westebbe 12/16/2021
+            // end trial if trial_duration is set
+            if (trial.trial_duration !== null) {
+                jsPsych.pluginAPI.setTimeout(function() {
+                    end_trial();
+                }, trial.trial_duration);
             }
-    
-            // gather the data to store for the trial
-            var trial_data = {
-                "fix_duration": "NaN ",
-                "rt": "NaN ",
-                "response": "NaN "
-            };
-    
-            // clear the display
-            display_element.innerHTML = '';
-    
-            // move on to the next trial
-            jsPsych.finishTrial(trial_data);
-        };
-    
-        //add in trial_duration Leo Westebbe 12/16/2021
-        // end trial if trial_duration is set
-        if (trial.trial_duration !== null) {
-            jsPsych.pluginAPI.setTimeout(function() {
-                end_trial();
-            }, trial.trial_duration);
         }
+
+
+
+
+
 
     };
 
