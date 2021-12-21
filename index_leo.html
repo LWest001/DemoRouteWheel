@@ -170,9 +170,10 @@
     }
 
     // ******* timeline components ******* // 
-    // practice      
+    // practice  
+    //add mask to timeline for practice and main Leo 12/21/2021    
     var memory_prac = {
-            timeline: [fixation, target_display, adjustment_display],
+            timeline: [fixation, target_display, mask, adjustment_display],
             timeline_variables: p_mat,
             randomize_order: true
         }
@@ -195,7 +196,7 @@
         // main        
     for (b = 0; b < n_block; b++) {
         this['memory_main' + (b + 1)] = {
-            timeline: [fixation, target_display, adjustment_display],
+            timeline: [fixation, target_display, mask, adjustment_display],
             timeline_variables: e_mat[b],
             randomize_order: true
         }
