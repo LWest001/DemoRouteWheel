@@ -76,8 +76,10 @@
     for (i = 0; i < 10; i++) {
         scenes.push(p_mat[i].img_path);
     }
+    // create mask_img for preloading Leo 12/21/2021
     var handle_bar = 'stimuli/handle_wheel.png';
     var handle_nobar = 'stimuli/noBar_wheel.png';
+    var mask_img = 'stimuli/mask.png'
     var inst_img = [];
     for (i = 1; i <= 5; i++) {
         inst_img.push('stimuli/instruction/Slide' + (i) + '.jpeg');
@@ -313,9 +315,10 @@
     //});
 
     // ****** Start ***** //
+    // add mask_img to preload_images Leo 12/21/2021
     jsPsych.init({
         timeline: timeline,
-        preload_images: [scenes, inst_img, handle_bar, handle_nobar]
+        preload_images: [scenes, inst_img, handle_bar, handle_nobar, mask_img]
     });
 </script>
 
