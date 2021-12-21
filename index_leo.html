@@ -125,7 +125,7 @@
         type: 'html-keyboard-response',
         stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;">+</div></div>',
         choices: jsPsych.NO_KEYS,
-        trial_duration: 2000,
+        trial_duration: 1500,
         data: {
             disp_type: 'fixation'
         }
@@ -164,7 +164,7 @@
         indicator_size: 'height: 570px',
         wait_fix: 1000,
         //change to 11000 from 10000 - the wait_fix time is subtracted from this
-        trial_duration: 11000,
+        trial_duration: 10000,
         data: {
             disp_type: 'test-adjustment',
             answer: jsPsych.timelineVariable('scene_num')
