@@ -141,6 +141,17 @@
             disp_type: 'test_target'
         }
     }
+
+    //add mask phase to trial Leo 12/21/2021
+    var mask = {
+        type: 'html-keyboard-response',
+        stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;"><img src="stimuli/mask.png"></img></div></div>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 250,
+        data: {
+            disp_type: 'fixation'
+        }
+    }
     var adjustment_display = {
         type: 'mouse-reconstruction',
         div_name: 'full_arena',
@@ -154,7 +165,8 @@
             disp_type: 'test-adjustment',
             answer: jsPsych.timelineVariable('scene_num')
         },
-        trial_duration: 10000,
+        //change to 11000 from 10000 - the wait_fix time is subtracted from this
+        trial_duration: 11000,
     }
 
     // ******* timeline components ******* // 
