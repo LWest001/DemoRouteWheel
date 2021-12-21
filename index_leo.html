@@ -151,7 +151,7 @@
         choices: jsPsych.NO_KEYS,
         trial_duration: 250,
         data: {
-            disp_type: 'fixation'
+            disp_type: 'mask'
         }
     }
     var adjustment_display = {
@@ -163,12 +163,14 @@
         indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
         indicator_size: 'height: 570px',
         wait_fix: 1000,
+        //change to 11000 from 10000 - the wait_fix time is subtracted from this
+        trial_duration: 11000,
         data: {
             disp_type: 'test-adjustment',
             answer: jsPsych.timelineVariable('scene_num')
         },
-        //change to 11000 from 10000 - the wait_fix time is subtracted from this
-        trial_duration: 11000,
+
+
     }
 
     // ******* timeline components ******* // 
