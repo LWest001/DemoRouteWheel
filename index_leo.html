@@ -50,6 +50,17 @@
 <body></body>
 
 <script>
+    // Add Prolific info recorder Leo 12/22/2021
+    // capture info from Prolific
+    var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+    var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+    jsPsych.data.addProperties({
+        subject_id: subject_id,
+        study_id: study_id,
+        session_id: session_id
+    });
     // * image host * //
     var img_host = 'https://raw.githubusercontent.com/YibiaoLiang/onRoute/ISC2/';
 
@@ -319,9 +330,13 @@
 
     // ****** Start ***** //
     // add mask_img to preload_images Leo 12/21/2021
+    // Add auto-redirect on finish to Prolific completion URL Leo 12/22/2021
     jsPsych.init({
         timeline: timeline,
-        preload_images: [scenes, inst_img, handle_bar, handle_nobar, mask_img]
+        preload_images: [scenes, inst_img, handle_bar, handle_nobar, mask_img],
+        on_finish: function() {
+            window.location = "https://app.prolific.co/submissions/complete?cc=106F945D"
+        }
     });
 </script>
 
