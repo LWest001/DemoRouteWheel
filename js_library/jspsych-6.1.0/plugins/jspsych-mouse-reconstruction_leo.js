@@ -217,9 +217,9 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
                 // gather the data to store for the trial
                 var trial_data = {
-                    "fix_duration": "NaN ",
-                    "rt": "NaN ",
-                    "response": "NaN "
+                    "fix_duration": "NaN",
+                    "rt": "NaN",
+                    "response": "NaN"
                 };
 
                 // clear the display
