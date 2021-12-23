@@ -44,6 +44,7 @@
     <!-- put in the animation scritp by by Bill 12/11/2021 -->
     <script src="js_library/jspsych-6.1.0/plugins/jspsych-animation.js"></script>
     <script src="make_condition_leo.js"></script>
+    <script src="timer.js"></script>
     <link href='js_library/jspsych-6.1.0/css/jspsych.css' rel='stylesheet' type="text/css">
 </head>
 
@@ -71,8 +72,9 @@
 
     // * condition set up * //        
     var radius = ['02', '04', '08', '16', '32'];
-    var n_bin_onWheel = 18;
-    var n_repetition = 3;
+    //change n_bin_onWheel to 12, n_repetition to 4 Leo 12/22/2021
+    var n_bin_onWheel = 12;
+    var n_repetition = 4;
     var n_block = 5;
     var p_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, prac_wheel);
     var p_mat = p_mat[0].slice(0, 10); // only 10 trials for practicing
@@ -175,7 +177,6 @@
         indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
         indicator_size: 'height: 570px',
         wait_fix: 1000,
-        //change to 11000 from 10000 - the wait_fix time is subtracted from this
         trial_duration: 10000,
         data: {
             disp_type: 'test-adjustment',
@@ -187,7 +188,7 @@
 
     // ******* timeline components ******* // 
     // practice  
-    //add mask to timeline for practice and main Leo 12/21/2021    
+    // add mask to timeline for practice and main Leo 12/21/2021
     var memory_prac = {
             timeline: [fixation, target_display, mask, adjustment_display],
             timeline_variables: p_mat,
@@ -199,9 +200,9 @@
             stimulus: html = '<p style="color: black; font-size: 20px;">' +
                 'Practice trials are done!</br>' +
                 'Click the <i>Start</i> button to start the main experiment.</br></br>' +
-                //Change to say just 54 trials for the pilot Leo Westebbe 12/17/2021
-                'The main experiment consists of 54 trials.</br>' +
-                'Then, the experiment will be complete.',
+                //Change to say 144 trials with breaks every 48 trials for the pilot Leo Westebbe 12/17/2021
+                'The main experiment consists of 144 trials.</br>' +
+                'There will be a short break every 48 trials.',
             //'The main experiment consists of ' + (radius.length * n_bin_onWheel * n_repetition) + ' trials.</br>' +
             //'A short break will be given every ' + (radius.length * n_bin_onWheel * n_repetition / n_block) + ' trials.',
             choices: ['Start'],
@@ -217,15 +218,20 @@
             randomize_order: true
         }
     }
+    //add Clock for break and adjust break language 12/23/2021
     for (b = 0; b < n_block; b++) {
         this['main_block_end' + (b + 1)] = {
             type: 'html-button-response',
-            stimulus: '<div style="font-size:20px;">Experiment block is done!<br>' +
-                'Press the button to proceed.</div>',
-            //end experiment here.
+            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+                'After <em>Block 1</em> and <em>Block 2</em>:' +
+                'Take a 3 minute break, then press the button to proceed .</div>' +
+                '<div id="clock"><span id="minutes"></span>:<span id="seconds"></span></div>' +
+                '<div id="breakPrompt" style="color:red;"></div>' +
+                'After <em>Block 3</em>:' +
+                'You do not need to take a break. Press the button to save data and move on to the end of the experiment.',
             //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
             //    'Take a break and press the button to proceed.</div>',
-            choices: ['Save data'],
+            choices: ['Proceed'],
             data: {
                 disp_type: 'prac_block_done'
             }
@@ -273,13 +279,14 @@
         type: 'html-button-response',
         //remove demographic page Leo Westebbe 12/17/2021
         stimulus: html = '<p style="color: black; font-size: 20px;">' +
-            'You are done! You may now close the browser.</br>',
+            'To finish this experiment, press the button below.<br>' +
+            'You will be directed back to Prolific. </p>',
         //'You are done! Now we would like to collect your demographic information.</br>' +
         //'Click the <b>Demographic questions</b> below to complete the form.</br>' +
         //'After submitting the form, come back to this page and check out the debriefing letter!</br></br>' +
         //'<a href="https://redcap.utoronto.ca/surveys/index.php?s=DDT8ME9KFL&study_name=scene_wheel_category_learning_200ms" target="_blank">' +
         //'Demographic questions </a></br></br></p>',
-        choices: ['End experiment'],
+        choices: ['Go back to Prolific.'],
         data: {
             disp_type: 'demographic-link'
         }
@@ -310,17 +317,18 @@
     timeline.push(general_instruction);
     timeline.push(memory_prac);
     timeline.push(prac2main);
-    for (b = 0; b < 1; b++) {
+    //change block counter to b<3 so there are 3 blocks Leo 12/22/2021
+    for (b = 0; b < 3; b++) {
         timeline.push(eval('memory_main' + (b + 1)));
         timeline.push(eval('main_block_end' + (b + 1)));
     }
     timeline.push(save_data);
-    //end fullscreen after saving data Leo Westebbe 12/17/2021
+    timeline.push(demographic_page);
+    //end fullscreen after demographic page
     timeline.push({
         type: 'fullscreen',
         fullscreen_mode: false
     });
-    timeline.push(demographic_page);
     //Comment out debrief page Leo Westebbe 12/17/2021
     //timeline.push(debrief_page);
     //timeline.push({
