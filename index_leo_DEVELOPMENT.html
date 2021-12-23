@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>Experiment - on Route </title>
+    <style>
+        #jspsych-animation-image {
+            /* add in the style for the animation by Bill 12/11/2021 */
+            height: 100% !important;
+            width: 100% !important;
+        }
+        
+        #basic_arena {
+            position: relative;
+            margin: auto;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 1024px;
+            height: 768px;
+            display: flex;
+            align-items: center;
+            /* border: 1px solid grey; */
+        }
+        
+        #full_arena {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
+    <script src='js_library/jspsych-6.1.0/jspsych.js'></script>
+    <script src="js_library/jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+    <script src='js_library/jspsych-6.1.0/plugins/jspsych-instructions.js'></script>
+    <script src='js_library/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js'></script>
+    <script src='js_library/jspsych-6.1.0/plugins/jspsych-html-button-response.js'></script>
+    <script src='js_library/jspsych-6.1.0/plugins/jspsych-mouse-reconstruction_leo.js'></script>
+    <script src="js_library/underscore-min.js"></script>
+    <!-- put in the animation scritp by by Bill 12/11/2021 -->
+    <script src="js_library/jspsych-6.1.0/plugins/jspsych-animation.js"></script>
+    <script src="make_condition_leo.js"></script>
+    <script src="timer.js"></script>
+    <link href='js_library/jspsych-6.1.0/css/jspsych.css' rel='stylesheet' type="text/css">
+</head>
+
+<body></body>
+
+<script>
+    // Add Prolific info recorder Leo 12/22/2021
+    // capture info from Prolific
+    var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+    var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+    jsPsych.data.addProperties({
+        subject_id: subject_id,
+        study_id: study_id,
+        session_id: session_id
+    });
+    // * image host * //
+    var img_host = 'https://raw.githubusercontent.com/YibiaoLiang/onRoute/ISC2/';
+
+    // * wheel info * //    
+    var prac_wheel = '01'; //change it to 01 sicne I don't have the 00 folder by Bill 11/12/2021
+    var main_wheel = '01';
+    // var radius_pool =   
+
+    // * condition set up * //        
+    var radius = ['02', '04', '08', '16', '32'];
+    //change n_bin_onWheel to 12, n_repetition to 4 Leo 12/22/2021
+    var n_bin_onWheel = 12;
+    var n_repetition = 4;
+    var n_block = 5;
+    var p_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, prac_wheel);
+    var p_mat = p_mat[0].slice(0, 10); // only 10 trials for practicing
+    var e_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, main_wheel);
+
+
+    //* preload stimuli *//       
+    var scenes = [];
+    for (i = 0; i < e_mat.length; i++) {
+        scenes.push(e_mat[i].img_path);
+    }
+    for (i = 0; i < 10; i++) {
+        scenes.push(p_mat[i].img_path);
+    }
+    // create mask_img for preloading Leo 12/21/2021
+    var handle_bar = 'stimuli/handle_wheel.png';
+    var handle_nobar = 'stimuli/noBar_wheel.png';
+    var mask_img = 'stimuli/mask.png'
+    var inst_img = [];
+    for (i = 1; i <= 6; i++) {
+        inst_img.push('stimuli/instruction/Slide' + (i) + '.jpeg');
+    }
+
+
+    // ********** displays ********** //
+    // * consent form * //
+    var consent_page = {
+            type: 'html-button-response',
+            stimulus: function() {
+                var html =
+                    '<p area-selected="font-size:15px;"> Press Agree to participate in the experiment.</p>' +
+                    '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
+                return html;
+            },
+            choices: ['Agree'],
+            data: {
+                disp_type: 'consent_page'
+            }
+
+        }
+        // * instructions * //
+    var general_instruction = {
+        type: 'instructions',
+        pages: [
+            '<img src="' + inst_img[0] + '" style="width:90%">',
+            '<img src="' + inst_img[1] + '" style="width:90%">',
+            '<img src="' + inst_img[2] + '" style="width:90%">',
+            '<img src="' + inst_img[3] + '" style="width:90%">',
+            '<img src="' + inst_img[4] + '" style="width:90%">',
+            '<img src="' + inst_img[5] + '" style="width:90%">'
+        ],
+        show_clickable_nav: true,
+        show_page_number: true,
+        data: {
+            disp_type: 'general_instruction'
+        }
+    }
+
+
+    // * delayted estimation task * //        
+    var fixation = {
+        type: 'html-keyboard-response',
+        stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;">+</div></div>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 1,
+        data: {
+            disp_type: 'fixation'
+        }
+    }
+    var target_display = {
+        type: 'html-keyboard-response',
+        stimulus: function() {
+            var html = '<div id="basic_arena"><div id="full_arena""><img src="' +
+                jsPsych.timelineVariable('img_path', true) + ' "></div></div>';
+            return html;
+        },
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 1,
+        data: {
+            disp_type: 'test_target'
+        }
+    }
+
+    //add mask phase to trial Leo 12/21/2021
+    var mask = {
+        type: 'html-keyboard-response',
+        stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;"><img src="stimuli/mask.png"></img></div></div>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 1,
+        data: {
+            disp_type: 'mask'
+        }
+    }
+    var adjustment_display = {
+        type: 'mouse-reconstruction',
+        div_name: 'full_arena',
+        starting_value: 360, // grey rectangular (I put grey image as 360.webp in each wheel path)
+        wheel_path: jsPsych.timelineVariable('wheel_path'),
+        image_size: 'height: 256px',
+        indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
+        indicator_size: 'height: 570px',
+        wait_fix: 1,
+        trial_duration: 1,
+        data: {
+            disp_type: 'test-adjustment',
+            answer: jsPsych.timelineVariable('scene_num')
+        },
+
+
+    }
+
+    // ******* timeline components ******* // 
+    // practice  
+    // add mask to timeline for practice and main Leo 12/21/2021
+    var memory_prac = {
+            timeline: [fixation, target_display, mask, adjustment_display],
+            timeline_variables: p_mat,
+            randomize_order: true
+        }
+        // prac2main
+    var prac2main = {
+            type: 'html-button-response',
+            stimulus: html = '<p style="color: black; font-size: 20px;">' +
+                'Practice trials are done!</br>' +
+                'Click the <i>Start</i> button to start the main experiment.</br></br>' +
+                //Change to say 144 trials with breaks every 48 trials for the pilot Leo Westebbe 12/17/2021
+                'The main experiment consists of 144 trials.</br>' +
+                'There will be a short break every 48 trials.',
+            //'The main experiment consists of ' + (radius.length * n_bin_onWheel * n_repetition) + ' trials.</br>' +
+            //'A short break will be given every ' + (radius.length * n_bin_onWheel * n_repetition / n_block) + ' trials.',
+            choices: ['Start'],
+            data: {
+                disp_type: 'start-mainExp'
+            }
+        }
+        // main        
+    for (b = 0; b < n_block; b++) {
+        this['memory_main' + (b + 1)] = {
+            timeline: [fixation, target_display, mask, adjustment_display],
+            timeline_variables: e_mat[b],
+            randomize_order: true
+        }
+    }
+    //add Clock for break and adjust break language 12/23/2021
+    for (b = 0; b < n_block; b++) {
+        this['main_block_end' + (b + 1)] = {
+            type: 'html-button-response',
+            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+                '<strong>After <em>Block 1</em> and <em>Block 2</em>:</strong><br>' +
+                'Take a 3 minute break, then press the button to proceed.</div>' +
+                '<div id="clock"><span id="minutes"></span>:<span id="seconds"></span></div>' +
+                '<div id="breakPrompt" style="color:red;"></div><br><br>' +
+                '<strong>After <em>Block 3</em>:</strong><br>' +
+                'You do not need to take a break. Press the button to save data and move on to the end of the experiment.',
+            //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+            //    'Take a break and press the button to proceed.</div>',
+            choices: ['Proceed'],
+            data: {
+                disp_type: 'prac_block_done'
+            }
+        }
+    }
+
+
+    // * save data * //
+    var save_data = {
+        type: 'html-keyboard-response',
+        stimulus: '<p>We are saving your data, please stay on this page.</p>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 3000,
+        data: { // create confirmation code with data saving
+            conf_code: Math.floor(1000 + Math.random() * 9000)
+        },
+        on_finish: function() {
+            // get data values
+            var data = {
+                experiment: "sceneWheel_categoryLearning_200ms",
+                repo: "sceneWheel_categoryLearning_200ms",
+                data: jsPsych.data.get().values(),
+                radius: radius,
+                interaction_data: jsPsych.data.getInteractionData().values(),
+                exp_condition: e_mat,
+                current_url: window.location.href
+            }
+
+            // send data to savejs
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://macklab-savejs.netlify.app/api/savejs');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response.success);
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
+    }
+
+    // demographic page
+    var demographic_page = {
+        type: 'html-button-response',
+        //remove demographic page Leo Westebbe 12/17/2021
+        stimulus: html = '<p style="color: black; font-size: 20px;">' +
+            'To finish this experiment, press the button below.<br>' +
+            'You will be directed back to Prolific. </p>',
+        //'You are done! Now we would like to collect your demographic information.</br>' +
+        //'Click the <b>Demographic questions</b> below to complete the form.</br>' +
+        //'After submitting the form, come back to this page and check out the debriefing letter!</br></br>' +
+        //'<a href="https://redcap.utoronto.ca/surveys/index.php?s=DDT8ME9KFL&study_name=scene_wheel_category_learning_200ms" target="_blank">' +
+        //'Demographic questions </a></br></br></p>',
+        choices: ['Go back to Prolific.'],
+        data: {
+            disp_type: 'demographic-link'
+        }
+    }
+
+    // debriefing letter
+    var debrief_page = {
+        type: 'html-keyboard-response',
+        stimulus: function() {
+            var html =
+                '<p area-selected="font-size:15px;"> Thank you for participating! </br> Once checking the defriefing letter and questions, you can leave this page.</p>' +
+                '<embed src="stimuli/debriefing.pdf" style="width:80vw; height:70vh;"></embed>'
+            return html;
+        },
+        choices: jsPsych.NO_KEYS,
+        data: {
+            disp_type: 'debriefing_page'
+        }
+    }
+
+    // ********** timeline fill up ********** // 
+    timeline = [];
+    timeline.push(consent_page);
+    timeline.push({
+        type: 'fullscreen',
+        fullscreen_mode: true
+    });
+    timeline.push(general_instruction);
+    //timeline.push(memory_prac);
+    timeline.push(prac2main);
+    //change block counter to b<3 so there are 3 blocks Leo 12/22/2021
+    for (b = 0; b < 3; b++) {
+        timeline.push(eval('memory_main' + (b + 1)));
+        timeline.push(eval('main_block_end' + (b + 1)));
+    }
+    timeline.push(save_data);
+    timeline.push({
+        type: 'fullscreen',
+        fullscreen_mode: false
+    });
+    timeline.push(demographic_page);
+    //end fullscreen after demographic page
+
+    //Comment out debrief page Leo Westebbe 12/17/2021
+    //timeline.push(debrief_page);
+    //timeline.push({
+    //    type: 'fullscreen',
+    //    fullscreen_mode: false
+    //});
+
+    // ****** Start ***** //
+    // add mask_img to preload_images Leo 12/21/2021
+    // Add auto-redirect on finish to Prolific completion URL Leo 12/22/2021
+    jsPsych.init({
+        timeline: timeline,
+        preload_images: [scenes, inst_img, handle_bar, handle_nobar, mask_img],
+        on_finish: function() {
+            window.location = "https://app.prolific.co/submissions/complete?cc=106F945D"
+        }
+    });
+</script>
+
+</html>
