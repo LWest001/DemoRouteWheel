@@ -44,7 +44,7 @@
     <!-- put in the animation scritp by by Bill 12/11/2021 -->
     <script src="js_library/jspsych-6.1.0/plugins/jspsych-animation.js"></script>
     <script src="make_condition_leo.js"></script>
-    <script src="timer.js"></script>
+
     <link href='js_library/jspsych-6.1.0/css/jspsych.css' rel='stylesheet' type="text/css">
 </head>
 
@@ -219,24 +219,91 @@
         }
     }
     //add Clock for break and adjust break language 12/23/2021
-    for (b = 0; b < n_block; b++) {
+    for (b = 0; b < n_block - 3; b++) {
         this['main_block_end' + (b + 1)] = {
             type: 'html-button-response',
-            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
-                '<strong>After <em>Block 1</em> and <em>Block 2</em>:</strong><br>' +
+            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
                 'Take a 3 minute break, then press the button to proceed.</div>' +
-                '<div id="clock"><span id="minutes"></span>:<span id="seconds"></span></div>' +
-                '<div id="breakPrompt" style="color:red;"></div><br><br>' +
-                '<strong>After <em>Block 3</em>:</strong><br>' +
-                'You do not need to take a break. Press the button to save data and move on to the end of the experiment.',
+                '<div style="font-size:20px;" id="clock"></div>' +
+                '<div style="font-size:20px;color:red;" id="breakPrompt"></div>',
             //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
             //    'Take a break and press the button to proceed.</div>',
             choices: ['Proceed'],
+
+            on_load: function() {
+                var wait_time = 0.1 * 60 * 1000; // in milliseconds
+                var start_time = performance.now();
+                document.querySelector('button').disabled = true;
+                var interval = setInterval(function() {
+                    var time_left = wait_time - (performance.now() - start_time);
+                    var minutes = Math.floor(time_left / 1000 / 60);
+                    var seconds = Math.floor((time_left - minutes * 1000 * 60) / 1000);
+                    var seconds_str = seconds.toString().padStart(2, '0');
+                    document.querySelector('#clock').innerHTML = minutes + ':' + seconds_str
+                    if (time_left <= 0) {
+                        document.querySelector('#clock').innerHTML = "0:00";
+                        document.querySelector('button').disabled = false;
+                        document.getElementById("clock").style.color = "red";
+                        document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
+                        clearInterval(interval);
+                    }
+                }, 250)
+            },
+            //timer loads with this screen Leo 12/23/2021
+            /*on_load: function() {
+                var sec = 0;
+
+                function pad(val) {
+                    return val > 9 ? val : "0" + val;
+                }
+                var interval = setInterval(function() {
+                    document.getElementById("seconds").innerHTML = pad(++sec % 60);
+                    document.getElementById("minutes").innerHTML = pad(parseInt(sec / 60, 10));
+                }, 1000);
+
+                function changeColor() {
+                    document.getElementById("clock").style.color = "red";
+                    document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
+                }
+                setInterval(changeColor, 180000);
+            },*/
             data: {
                 disp_type: 'prac_block_done'
             }
         }
     }
+    if (b < 3) {
+        this['main_block_end' + (b + 1)] = {
+            type: 'html-button-response',
+            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                'Press the button to save data and move on to the end of the experiment.<br></div>',
+            //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+            //    'Take a break and press the button to proceed.</div>',
+            choices: ['Save data'],
+            data: {
+                disp_type: 'prac_block_done'
+            },
+        }
+    };
+    //timer loads with this screen Leo 12/23/2021
+    /*on_load: function() {
+        var sec = 0;
+
+        function pad(val) {
+            return val > 9 ? val : "0" + val;
+        }
+        var interval = setInterval(function() {
+            document.getElementById("seconds").innerHTML = pad(++sec % 60);
+            document.getElementById("minutes").innerHTML = pad(parseInt(sec / 60, 10));
+        }, 1000);
+
+        function changeColor() {
+            document.getElementById("clock").style.color = "red";
+            document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
+        }
+        setInterval(changeColor, 180000);
+    },*/
+
 
 
     // * save data * //
