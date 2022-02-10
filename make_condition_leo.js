@@ -9,7 +9,7 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
     // make empty condition
     var basic_condition = [];
 
-    // put in the image folder by Bill 2/10/2022
+    // put in the route subfolder by Bill 2/10/2022
     var route = _.shuffle(['IS1/','ISC2/', 'SB1_360/']);
 
     // seed_point on wheel
@@ -29,8 +29,8 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
     var final_condition =[];
 
     // assign value to each bin in each radius condition for each repetition
-    //for (r = 0; r < radius.length; r++) { //put radius out of the loop since not useing it for now by Bill 2/10/2022
-    for (f= 0; f < route.length; f++ ){
+    //for (r = 0; r < radius.length; r++) { //put radius out of the loop since not using it for now by Bill 2/10/2022
+    for (f= 0; f < route.length; f++ ){ //put route into the loop to create different block for different route by Bill 2/10/2022
         for (b = 0; b < n_bin_onWheel; b++) {
             var shuffled_jitter = _.shuffle(jitter_option);
             for (rp = 0; rp < n_repetition; rp++) {
@@ -44,7 +44,7 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
                     }
                 }
                 basic_condition.push({
-                    //radius: radius[r],//put radius out of the loop since not useing it for now by Bill 2/10/2022
+                    //radius: radius[r],//put radius out of the loop since not using it for now by Bill 2/10/2022
                     scene_num: ('00000' + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6).toString(),
                     wheel_path: img_host + route[f], //Wheel path is the whole folder, so it the image can change base on the mouse, by Bill 11/23/2021 // change to IS2 by Leo 12/2/2021
                     //wheel_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/', //Wheel path 
