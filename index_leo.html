@@ -218,53 +218,55 @@
         }
     }
     //add Clock for break and adjust break language 12/23/2021
-    for (b = 0; b < n_block - 3; b++) {
-        this['main_block_end' + (b + 1)] = {
-            type: 'html-button-response',
-            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
-                'Take a 3 minute break, then press the button to proceed.</div>' +
-                '<div style="font-size:20px;" id="clock"></div>' +
-                '<div style="font-size:20px;color:red;" id="breakPrompt"></div>',
-            //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
-            //    'Take a break and press the button to proceed.</div>',
-            choices: ['Proceed'],
-            //timer loads with this screen Leo 12/23/2021
-            on_load: function() {
-                var wait_time = 03 * 60 * 1000; // in milliseconds
-                var start_time = performance.now();
-                document.querySelector('button').disabled = true;
-                var interval = setInterval(function() {
-                    var time_left = wait_time - (performance.now() - start_time);
-                    var minutes = Math.floor(time_left / 1000 / 60);
-                    var seconds = Math.floor((time_left - minutes * 1000 * 60) / 1000);
-                    var seconds_str = seconds.toString().padStart(2, '0');
-                    document.querySelector('#clock').innerHTML = minutes + ':' + seconds_str
-                    if (time_left <= 0) {
-                        document.querySelector('#clock').innerHTML = "0:00";
-                        document.querySelector('button').disabled = false;
-                        document.getElementById("clock").style.color = "red";
-                        document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
-                        clearInterval(interval);
-                    }
-                }, 250)
-            },
+    for (b = 0; b < n_block - 2; b++) {
+        if (b < 2) {
+            this['main_block_end' + (b + 1)] = {
+                    type: 'html-button-response',
+                    stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                        'Take a 3 minute break, then press the button to proceed.</div>' +
+                        '<div style="font-size:20px;" id="clock"></div>' +
+                        '<div style="font-size:20px;color:red;" id="breakPrompt"></div>',
+                    //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+                    //    'Take a break and press the button to proceed.</div>',
+                    choices: ['Proceed'],
+                    //timer loads with this screen Leo 12/23/2021
+                    on_load: function() {
+                        var wait_time = 03 * 60 * 1000; // in milliseconds
+                        var start_time = performance.now();
+                        document.querySelector('button').disabled = true;
+                        var interval = setInterval(function() {
+                            var time_left = wait_time - (performance.now() - start_time);
+                            var minutes = Math.floor(time_left / 1000 / 60);
+                            var seconds = Math.floor((time_left - minutes * 1000 * 60) / 1000);
+                            var seconds_str = seconds.toString().padStart(2, '0');
+                            document.querySelector('#clock').innerHTML = minutes + ':' + seconds_str
+                            if (time_left <= 0) {
+                                document.querySelector('#clock').innerHTML = "0:00";
+                                document.querySelector('button').disabled = false;
+                                document.getElementById("clock").style.color = "red";
+                                document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
+                                clearInterval(interval);
+                            }
+                        }, 250)
+                    },
 
-            data: {
-                disp_type: 'prac_block_done'
+                    data: {
+                        disp_type: 'prac_block_done'
+                    }
+                }
+                // move final main_block_end inside of if statement
+        } else {
+            this['main_block_end' + (b + 1)] = {
+                type: 'html-button-response',
+                stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                    'Press the button to save data and move on to the end of the experiment.<br></div>',
+                //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
+                //    'Take a break and press the button to proceed.</div>',
+                choices: ['Save data'],
+                data: {
+                    disp_type: 'prac_block_done'
+                },
             }
-        }
-    }
-    if (b < 3) {
-        this['main_block_end' + (b + 1)] = {
-            type: 'html-button-response',
-            stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
-                'Press the button to save data and move on to the end of the experiment.<br></div>',
-            //stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br>' +
-            //    'Take a break and press the button to proceed.</div>',
-            choices: ['Save data'],
-            data: {
-                disp_type: 'prac_block_done'
-            },
         }
     };
 
