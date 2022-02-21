@@ -200,12 +200,12 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     // next trial
                     // jsPsych.finishTrial(trial_data);} // need to use end_trial for trial duration Leo 2/21/22
                     if (trial.response_ends_trial) {
-                        end_trial();
+                        end_trial(trial_data);
                     }
 
                 }
                 // add in the function to end trial when it is time by Bill 12/12/2021
-            function end_trial() {
+            function end_trial(data) {
 
                 // kill any remaining setTimeout handlers
                 jsPsych.pluginAPI.clearAllTimeouts();
@@ -219,11 +219,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 document.removeEventListener("click", mouseclickevent);
 
                 // gather the data to store for the trial
-                var trial_data = {
-                    "fix_duration": "NaN",
-                    "rt": "NaN",
-                    "response": "NaN"
-                };
+                trial_data = data;
 
                 // clear the display
                 display_element.innerHTML = '';
