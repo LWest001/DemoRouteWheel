@@ -193,6 +193,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                         "rt": response_time,
                         "response": final_angle
                     };
+
                     display_element.innerHTML = "";
 
                     document.removeEventListener("click", mouseclickevent);
@@ -241,18 +242,16 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             //add in trial_duration Leo Westebbe 12/16/2021
             // end trial if trial_duration is set
             if (trial.trial_duration !== null) {
+                trial_data = {
+                    "fix_duration": "NaN",
+                    "rt": "NaN",
+                    "response": "NaN"
+                }
                 jsPsych.pluginAPI.setTimeout(function() {
-                    end_trial();
+                    end_trial(trial_data);
                 }, trial.trial_duration);
             }
         }
-
-
-
-
-
-
     };
-
     return plugin;
 })();
