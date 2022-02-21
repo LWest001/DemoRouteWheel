@@ -198,7 +198,10 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     document.removeEventListener("click", mouseclickevent);
 
                     // next trial
-                    jsPsych.finishTrial(trial_data);
+                    // jsPsych.finishTrial(trial_data);} // need to use end_trial for trial duration Leo 2/21/22
+                    if (trial.response_ends_trial) {
+                        end_trial();
+                    }
 
                 }
                 // add in the function to end trial when it is time by Bill 12/12/2021
