@@ -11,7 +11,7 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
 
     // put in the route subfolder by Bill 2/10/2022
     // fixed typo (ISC1 vs IS1)
-    var route = _.shuffle(['OLM/', 'ISC2/', 'SB1_360/']);
+    var route = _.shuffle(['OLM/', 'ISC2/', 'SB1/']);
 
     // seed_point on wheel
     var bin_startPoint = [];
