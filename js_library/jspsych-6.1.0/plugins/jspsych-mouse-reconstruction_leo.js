@@ -34,6 +34,13 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 default: undefined,
                 description: 'A wheel to be preloaded for this trial'
             },
+            // Leo 3/1 for difference calculation
+            scene_num: {
+                type: jsPsych.plugins.parameterType.INT,
+                pretty_name: 'Path to the current wheel for this trial',
+                default: undefined,
+                description: 'Scene number for calculating difference value'
+            },
             image_size: {
                 type: jsPsych.plugins.parameterType.STRING,
                 pretty_name: 'Size of an image',
@@ -79,6 +86,20 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 default: [],
                 description: 'Size of a cue image in html style format (eg. width: xx%).'
             },
+            //Add in trial duration and response_ends_trial Leo Westebbe 12/16/21
+            trial_duration: {
+                type: jsPsych.plugins.parameterType.INT,
+                pretty_name: 'Trial duration',
+                default: null,
+                description: 'How long to show trial before it ends.'
+            },
+            response_ends_trial: {
+                type: jsPsych.plugins.parameterType.BOOL,
+                pretty_name: 'Response ends trial',
+                default: true,
+                description: 'If true, trial will end when subject makes a response.'
+            },
+            //end add Leo 12/16/21
             cue_div_name: {
                 type: jsPsych.plugins.parameterType.STRING,
                 pretty_name: 'DIV that contains wheel',
@@ -119,6 +140,8 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 jsPsych.pluginAPI.setTimeout(run_trial, fix_dur - diff);
             }
         }
+        // increment trial counter for each trial Leo 2/28
+        trialCount += 1
 
         // Run adjustment trial (draw images according to mouse position)
         function run_trial() {
@@ -169,24 +192,67 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
             // Finish trial
             var mouseclickevent = function() {
-                document.removeEventListener('mousemove', mousemovementevent);
-                var end_time = performance.now();
-                var response_time = end_time - start_time;
-                var final_angle = param;
-                // save data
-                var trial_data = {
-                    "fix_duration": start_time - fixstart,
-                    "rt": response_time,
-                    "response": final_angle
-                };
-                display_element.innerHTML = "";
+                    document.removeEventListener('mousemove', mousemovementevent);
+                    var end_time = performance.now();
+                    var response_time = end_time - start_time;
+                    var final_angle = param;
+                    // Difference calculator Leo 3/1
+                    var scene_num = trial.scene_num;
+                    var centered = final_angle + 180 - scene_num;
+                    if (centered < 0) {
+                        fixedResponse = centered + 360;
+                    } else if (centered > 360) {
+                        fixedResponse = centered - 360;
+                    } else {
+                        fixedResponse = centered;
+                    }
+                    var difference = fixedResponse - 180;
+                    console.log(difference);
 
+                    // Add trialCount to data record Leo 2/28
+                    // add difference to data record Leo 3/1
+                    var trial_data = {
+                        "trial_num": trialCount,
+                        "fix_duration": start_time - fixstart,
+                        "rt": response_time,
+                        "difference": difference,
+                        "response": final_angle
+                    };
+
+                    display_element.innerHTML = "";
+
+                    document.removeEventListener("click", mouseclickevent);
+
+                    // next trial
+                    // jsPsych.finishTrial(trial_data);} // need to use end_trial for trial duration Leo 2/21/22
+                    if (trial.response_ends_trial) {
+                        end_trial(trial_data);
+                    }
+
+                }
+                // add in the function to end trial when it is time by Bill 12/12/2021
+            function end_trial(data) {
+
+                // kill any remaining setTimeout handlers
+                jsPsych.pluginAPI.clearAllTimeouts();
+
+                // kill keyboard listeners
+                if (typeof keyboardListener !== 'undefined') {
+                    jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+                }
+                // kill mouse listeners
+                document.removeEventListener('mousemove', mousemovementevent);
                 document.removeEventListener("click", mouseclickevent);
 
-                // next trial
-                jsPsych.finishTrial(trial_data);
+                // gather the data to store for the trial
+                trial_data = data;
 
-            }
+                // clear the display
+                display_element.innerHTML = '';
+
+                // move on to the next trial
+                jsPsych.finishTrial(trial_data);
+            };
             document.addEventListener("click", mouseclickevent);
 
             // initial draw
@@ -198,9 +264,22 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             var container_centerX = rect.left + rect.width / 2;
             var container_centerY = rect.top + rect.height / 2;
 
+            //add in trial_duration Leo Westebbe 12/16/2021
+            // end trial if trial_duration is set
+            // record trial number and difference value Leo 3/2
+            if (trial.trial_duration !== null) {
+                trial_data = {
+                    "trial_num": trialCount,
+                    "fix_duration": "NaN",
+                    "rt": "NaN",
+                    "difference": "NaN",
+                    "response": "NaN"
+                }
+                jsPsych.pluginAPI.setTimeout(function() {
+                    end_trial(trial_data);
+                }, trial.trial_duration);
+            }
         }
-
     };
-
     return plugin;
 })();
