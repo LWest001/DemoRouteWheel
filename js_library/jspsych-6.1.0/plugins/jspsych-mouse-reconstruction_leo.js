@@ -212,8 +212,8 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     // Add trialCount to data record Leo 2/28
                     // add difference to data record Leo 3/1
                     var trial_data = {
-                        "trial_num": trialCount,
                         "fix_duration": start_time - fixstart,
+                        "trial_num": trialCount,
                         "rt": response_time,
                         "difference": difference,
                         "response": final_angle
