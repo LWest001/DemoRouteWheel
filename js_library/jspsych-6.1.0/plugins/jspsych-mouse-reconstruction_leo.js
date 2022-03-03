@@ -197,6 +197,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     var response_time = end_time - start_time;
                     var final_angle = param;
                     // Difference calculator Leo 3/1
+                    // scene_num is the correct frame number, final_angle is the selected frame.
                     var scene_num = trial.scene_num;
                     var centered = final_angle + 180 - scene_num;
                     if (centered < 0) {
@@ -207,7 +208,6 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                         fixedResponse = centered;
                     }
                     var difference = fixedResponse - 180;
-                    console.log(difference);
 
                     // Add trialCount to data record Leo 2/28
                     // add difference to data record Leo 3/1
