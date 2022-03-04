@@ -179,7 +179,8 @@
         choices: jsPsych.NO_KEYS,
         trial_duration: 500,
         data: {
-            disp_type: 'test_target'
+            disp_type: 'test_target',
+            route: jsPsych.timelineVariable('route')
         }
     }
 
@@ -206,6 +207,7 @@
         trial_duration: 10000,
         data: {
             disp_type: 'test-adjustment',
+            route: jsPsych.timelineVariable('route'),
             answer: jsPsych.timelineVariable('scene_num')
         }
     }
