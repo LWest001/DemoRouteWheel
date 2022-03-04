@@ -37,10 +37,17 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             // Leo 3/1 for difference calculation
             scene_num: {
                 type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Path to the current wheel for this trial',
+                pretty_name: 'Scene number',
                 default: undefined,
                 description: 'Scene number for calculating difference value'
             },
+            // // Leo 3/4 for block counter data output
+            // block: {
+            //     type: jsPsych.plugins.parameterType.INT,
+            //     pretty_name: 'Block number',
+            //     default: undefined,
+            //     description: 'Block number for outputting data to the file'
+            // },
             image_size: {
                 type: jsPsych.plugins.parameterType.STRING,
                 pretty_name: 'Size of an image',
@@ -141,7 +148,10 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             }
         }
         // increment trial counter for each trial Leo 2/28
+        // increment total trial counter for each trial, for block counter Leo 3/4
         trialCount += 1
+        totalTrials += 1
+        countBlocks()
 
         // Run adjustment trial (draw images according to mouse position)
         function run_trial() {
@@ -211,8 +221,10 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
                     // Add trialCount to data record Leo 2/28
                     // add difference to data record Leo 3/1
+                    // Add block count to data record Leo 3/4
                     var trial_data = {
                         "fix_duration": start_time - fixstart,
+                        "block": blockNum,
                         "trial_num": trialCount,
                         "rt": response_time,
                         "difference": difference,
@@ -267,10 +279,12 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             //add in trial_duration Leo Westebbe 12/16/2021
             // end trial if trial_duration is set
             // record trial number and difference value Leo 3/2
+            // Add block count to data record Leo 3/4
             if (trial.trial_duration !== null) {
                 trial_data = {
-                    "trial_num": trialCount,
                     "fix_duration": start_time - fixstart,
+                    "block": blockNum,
+                    "trial_num": trialCount,
                     "rt": "NaN",
                     "difference": "NaN",
                     "response": "NaN"

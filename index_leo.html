@@ -67,6 +67,21 @@
 
     // Add trial counter variable Leo 2/28
     var trialCount = 0;
+    var totalTrials = 0;
+    var blockNum = 0;
+    // add block counter Leo 2/28
+    function countBlocks() {
+        if (totalTrials > 10 && totalTrials <= 10 + n_bin_onWheel * n_repetition) {
+            blockNum = 1
+        } else if (totalTrials > 10 + n_bin_onWheel * n_repetition && totalTrials <= 10 + 2 * n_bin_onWheel * n_repetition) {
+            blockNum = 2
+        } else if (totalTrials > 10 + 2 * n_bin_onWheel * n_repetition) {
+            blockNum = 3
+        } else {
+            blockNum = 0
+        }
+        console.log(blockNum)
+    }
 
     // * wheel info * //    
     var prac_wheel = '01'; //change it to 01 sicne I don't have the 00 folder by Bill 11/12/2021
