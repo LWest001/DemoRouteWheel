@@ -247,7 +247,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             if (trial.trial_duration !== null) {
                 trial_data = {
                     "trial_num": trialCount,
-                    "fix_duration": "NaN",
+                    "fix_duration": start_time - fixstart,
                     "rt": "NaN",
                     "response": "NaN"
                 }

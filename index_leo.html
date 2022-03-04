@@ -176,6 +176,7 @@
         div_name: 'full_arena',
         starting_value: 360, // grey rectangular (I put grey image as 360.webp in each wheel path)
         wheel_path: jsPsych.timelineVariable('wheel_path'),
+        scene_num: jsPsych.timelineVariable('scene_num'),
         image_size: 'height: 256px',
         indicator_path: ['stimuli/noBar_wheel.png', 'stimuli/handle_wheel.png'],
         indicator_size: 'height: 570px',
@@ -209,6 +210,9 @@
             choices: ['Start'],
             data: {
                 disp_type: 'start-mainExp'
+            },
+            on_finish: function() {
+                trialCount = 0
             }
         }
         // main        
@@ -216,7 +220,7 @@
         this['memory_main' + (b + 1)] = {
             timeline: [fixation, target_display, mask, adjustment_display],
             timeline_variables: e_mat[b],
-            randomize_order: true
+            randomize_order: true,
         }
     }
     //add Clock for break and adjust break language 12/23/2021
@@ -256,6 +260,12 @@
 
                     data: {
                         disp_type: 'prac_block_done'
+                    },
+                    // Reset trial counter Leo 3/1
+
+                    // Reset trial counter Leo 3/1
+                    on_finish: function() {
+                        trialCount = 0
                     }
                 }
                 // move final main_block_end inside of if statement
@@ -269,6 +279,11 @@
                 choices: ['Save data'],
                 data: {
                     disp_type: 'prac_block_done'
+                },
+                // Reset trial counter Leo 3/1
+                on_finish: function() {
+                    trialCount = 0
+
                 }
             }
         }
