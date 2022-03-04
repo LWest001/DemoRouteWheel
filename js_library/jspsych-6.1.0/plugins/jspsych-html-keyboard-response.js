@@ -89,6 +89,8 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
 
             // gather the data to store for the trial
             var trial_data = {
+                "block": blockNum,
+                "trial_num": trialCount,
                 "rt": response.rt,
                 "stimulus": trial.stimulus,
                 "key_press": response.key

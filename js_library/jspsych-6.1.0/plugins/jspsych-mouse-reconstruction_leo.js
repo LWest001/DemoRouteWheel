@@ -41,13 +41,6 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 default: undefined,
                 description: 'Scene number for calculating difference value'
             },
-            // // Leo 3/4 for block counter data output
-            // block: {
-            //     type: jsPsych.plugins.parameterType.INT,
-            //     pretty_name: 'Block number',
-            //     default: undefined,
-            //     description: 'Block number for outputting data to the file'
-            // },
             image_size: {
                 type: jsPsych.plugins.parameterType.STRING,
                 pretty_name: 'Size of an image',
@@ -147,11 +140,11 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 jsPsych.pluginAPI.setTimeout(run_trial, fix_dur - diff);
             }
         }
-        // increment trial counter for each trial Leo 2/28
-        // increment total trial counter for each trial, for block counter Leo 3/4
-        trialCount += 1
-        totalTrials += 1
-        countBlocks()
+        // // increment trial counter for each trial Leo 2/28
+        // // increment total trial counter for each trial, for block counter Leo 3/4
+        // trialCount += 1
+        // totalTrials += 1
+        // countBlocks()
 
         // Run adjustment trial (draw images according to mouse position)
         function run_trial() {
@@ -223,9 +216,9 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     // add difference to data record Leo 3/1
                     // Add block count to data record Leo 3/4
                     var trial_data = {
-                        "fix_duration": start_time - fixstart,
                         "block": blockNum,
                         "trial_num": trialCount,
+                        "fix_duration": start_time - fixstart,
                         "rt": response_time,
                         "difference": difference,
                         "response": final_angle
@@ -282,9 +275,9 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             // Add block count to data record Leo 3/4
             if (trial.trial_duration !== null) {
                 trial_data = {
-                    "fix_duration": start_time - fixstart,
                     "block": blockNum,
                     "trial_num": trialCount,
+                    "fix_duration": start_time - fixstart,
                     "rt": "NaN",
                     "difference": "NaN",
                     "response": "NaN"

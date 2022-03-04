@@ -160,6 +160,13 @@
         trial_duration: 1500,
         data: {
             disp_type: 'fixation'
+        },
+        // increment trial counter for each trial Leo 2/28
+        // increment total trial counter for each trial, for block counter Leo 3/4
+        on_load: function() {
+            trialCount += 1
+            totalTrials += 1
+            countBlocks()
         }
     }
     var target_display = {
