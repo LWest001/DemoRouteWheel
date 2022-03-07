@@ -34,12 +34,12 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 default: undefined,
                 description: 'A wheel to be preloaded for this trial'
             },
-            // Leo 3/1 for difference calculation
+            // Leo 3/1 for error calculation
             scene_num: {
                 type: jsPsych.plugins.parameterType.INT,
                 pretty_name: 'Scene number',
                 default: undefined,
-                description: 'Scene number for calculating difference value'
+                description: 'Scene number for calculating error value'
             },
             image_size: {
                 type: jsPsych.plugins.parameterType.STRING,
@@ -199,7 +199,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     var end_time = performance.now();
                     var response_time = end_time - start_time;
                     var final_angle = param;
-                    // Difference calculator Leo 3/1
+                    // error calculator Leo 3/1
                     // scene_num is the correct frame number, final_angle is the selected frame.
                     var scene_num = trial.scene_num;
                     var centered = final_angle + 180 - scene_num;
@@ -210,17 +210,17 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     } else {
                         fixedResponse = centered;
                     }
-                    var difference = fixedResponse - 180;
+                    var error = fixedResponse - 180;
 
                     // Add trialCount to data record Leo 2/28
-                    // add difference to data record Leo 3/1
+                    // add error to data record Leo 3/1
                     // Add block count to data record Leo 3/4
                     var trial_data = {
                         "block": blockNum,
                         "trial_num": trialCount,
                         "fix_duration": start_time - fixstart,
                         "rt": response_time,
-                        "difference": difference,
+                        "error": error,
                         "response": final_angle
                     };
 
@@ -271,7 +271,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
             //add in trial_duration Leo Westebbe 12/16/2021
             // end trial if trial_duration is set
-            // record trial number and difference value Leo 3/2
+            // record trial number and error value Leo 3/2
             // Add block count to data record Leo 3/4
             if (trial.trial_duration !== null) {
                 trial_data = {
@@ -279,7 +279,7 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                     "trial_num": trialCount,
                     "fix_duration": start_time - fixstart,
                     "rt": "NaN",
-                    "difference": "NaN",
+                    "error": "NaN",
                     "response": "NaN"
                 }
                 jsPsych.pluginAPI.setTimeout(function() {
