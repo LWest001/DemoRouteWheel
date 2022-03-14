@@ -86,7 +86,10 @@
     // * wheel info * //    
     var prac_wheel = '01'; //change it to 01 sicne I don't have the 00 folder by Bill 11/12/2021
     var main_wheel = '01';
-    // var radius_pool =   
+
+    // Make practice variable so that practice uses separate route Leo 3/14
+    var prac = '00';
+    var main = '01';
 
     // * condition set up * //        
     var radius = ['02', '04', '08', '16', '32'];
@@ -94,9 +97,10 @@
     var n_bin_onWheel = 12;
     var n_repetition = 4;
     var n_block = 5;
-    var p_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, prac_wheel);
+    // add prac_or_main Leo 3/14/22
+    var p_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, prac_wheel, prac);
     var p_mat = p_mat[0].slice(0, 10); // only 10 trials for practicing
-    var e_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, main_wheel);
+    var e_mat = make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, main_wheel, main);
 
 
     //* preload stimuli *//       

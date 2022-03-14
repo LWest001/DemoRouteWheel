@@ -4,14 +4,35 @@
 // Each radius would tested 'n_repeition' times 
 // *
 
-function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, wheel_num) {
+// Add prac_or_main parameter so that practice uses ISC2 Leo 3/14/22
+function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, wheel_num, prac_or_main) {
 
     // make empty condition
     var basic_condition = [];
 
     // put in the route subfolder by Bill 2/10/2022
     // fixed typo (ISC1 vs IS1)
-    var route = _.shuffle(['OLM/', 'JMP3/', 'SB1/']);
+    // Remove shuffling Leo 3/14/22
+    // Set up 6 counterbalanced conditions, and a practice condition Leo 3/14/22
+    var route = [];
+
+    if (prac_or_main == 00) {
+        route = ['ISC2/']
+    } else {
+        if (CONDITION == 1) {
+            route = ['OLM/', 'JMP3/', 'STB9/'];
+        } else if (CONDITION == 2) {
+            route = ['OLM/', 'STB9/', 'JMP3/'];
+        } else if (CONDITION == 3) {
+            route = ['JMP3/', 'STB9/', 'OLM/'];
+        } else if (CONDITION == 4) {
+            route = ['JMP3/', 'OLM/', 'STB9/'];
+        } else if (CONDITION == 5) {
+            route = ['STB9/', 'OLM/', 'JMP3/'];
+        } else {
+            route = ['STB9/', 'JMP3/', 'OLM/']
+        }
+    }
 
     // seed_point on wheel
     var bin_startPoint = [];
@@ -35,15 +56,16 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
         for (b = 0; b < n_bin_onWheel; b++) {
             var shuffled_jitter = _.shuffle(jitter_option);
             for (rp = 0; rp < n_repetition; rp++) {
-                var target_num = bin_startPoint[b] + shuffled_jitter[rp];
-                var targetSeries = [];
-                for (backCount = 20; backCount > 0; backCount--) {
-                    if (target_num - backCount + 1 >= 0) {
-                        targetSeries.push(img_host + route[f] + ('00000' + (target_num - backCount + 1)).slice(-6) + '.jpg')
-                    } else {
-                        targetSeries.push(img_host + route[f] + ('00000' + (target_num - backCount + 361)).slice(-6) + '.jpg')
-                    }
-                }
+                // Remove animation section Leo 3/14/22
+                // var target_num = bin_startPoint[b] + shuffled_jitter[rp];
+                // var targetSeries = [];
+                // for (backCount = 20; backCount > 0; backCount--) {
+                //     if (target_num - backCount + 1 >= 0) {
+                //         targetSeries.push(img_host + route[f] + ('00000' + (target_num - backCount + 1)).slice(-6) + '.jpg')
+                //     } else {
+                //         targetSeries.push(img_host + route[f] + ('00000' + (target_num - backCount + 361)).slice(-6) + '.jpg')
+                //     }
+                // }
                 basic_condition.push({
                     //radius: radius[r],//put radius out of the loop since not using it for now by Bill 2/10/2022
                     scene_num: ('00000' + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6).toString(),
@@ -52,7 +74,7 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
                     img_path: img_host + route[f] + ('00000' + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6) + '.jpg', // img_path is the image for the target, change it to ISC, by Bill 11/23/2021// change to IS2 by Leo 12/2/2021
                     // img_path: img_host+'Wheel'+wheel_num+'/wheel'+wheel_num+'_r'+radius[r]+'/'+
                     //         ('00000'+(bin_startPoint[b]+shuffled_jitter[rp])).slice(-6)+'.webp'   
-                    target_series: targetSeries,
+                    // target_series: targetSeries,
                     route: route[f]
                 })
             }
