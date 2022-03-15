@@ -20,17 +20,17 @@ function make_condition(radius, n_bin_onWheel, n_repetition, n_block, img_host, 
         route = ['ISC2/']
     } else {
         if (CONDITION == 1) {
-            route = ['OLM/', 'JMP3/', 'STB9/'];
+            route = ['OLM7/', 'JMP3/', 'STB9/'];
         } else if (CONDITION == 2) {
-            route = ['OLM/', 'STB9/', 'JMP3/'];
+            route = ['OLM7/', 'STB9/', 'JMP3/'];
         } else if (CONDITION == 3) {
-            route = ['JMP3/', 'STB9/', 'OLM/'];
+            route = ['JMP3/', 'STB9/', 'OLM7/'];
         } else if (CONDITION == 4) {
-            route = ['JMP3/', 'OLM/', 'STB9/'];
+            route = ['JMP3/', 'OLM7/', 'STB9/'];
         } else if (CONDITION == 5) {
-            route = ['STB9/', 'OLM/', 'JMP3/'];
+            route = ['STB9/', 'OLM7/', 'JMP3/'];
         } else {
-            route = ['STB9/', 'JMP3/', 'OLM/']
+            route = ['STB9/', 'JMP3/', 'OLM7/']
         }
     }
 
