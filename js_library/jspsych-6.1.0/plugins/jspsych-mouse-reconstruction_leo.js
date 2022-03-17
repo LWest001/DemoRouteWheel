@@ -157,13 +157,14 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 }
 
                 // var html = trial.stim_function(param, wsp); // <- this is for when stimuli are drawn outside this plugin
+                // make images undraggable to prevent bug where click does not end the trial Leo 3/17
                 sceneNum = ("000000" + param).slice(-6);
                 var html = '<div id="basic_arena"><div id="' + trial.div_name + '">' +
-                    '<img src="' + wheel_path + sceneNum + '.jpg" style="' + trial.image_size + '"></div>' + // scene, // change it back to wheel path so it can read data from te host 11/23/2021 by Bill
-                    '<div id="' + trial.div_name + '"><img src="' + indicator + '" ' + // indicator
+                    '<img draggable="false" src="' + wheel_path + sceneNum + '.jpg" style="' + trial.image_size + '"></div>' + // scene, // change it back to wheel path so it can read data from te host 11/23/2021 by Bill
+                    '<div id="' + trial.div_name + '"><img draggable="false" src="' + indicator + '" ' + // indicator
                     'style="' + trial.indicator_size + '; transform: rotate(' + (param + wsp) + 'deg)"></div>' +
                     '<div id="' + trial.cue_div_name + '">' + // cue
-                    '<img src="' + trial.cue_path + '" style="margin:auto; ' + trial.cue_size + '"></div></div>';
+                    '<img draggable="false" src="' + trial.cue_path + '" style="margin:auto; ' + trial.cue_size + '"></div></div>';
 
                 display_element.innerHTML = html;
             }
