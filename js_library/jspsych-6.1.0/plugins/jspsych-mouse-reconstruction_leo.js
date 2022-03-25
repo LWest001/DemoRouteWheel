@@ -147,6 +147,10 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             // current param (will be continuously updated)
             var param = trial.starting_value;
 
+            // Initialize arrays of live errors, live frame number Leo 3/25
+            var live_error_sequence = []
+            var live_scene_num_sequence = []
+
             // Send current param to display function   
             function draw(param) {
                 // make initial display with the wheel without indicator bar         
@@ -178,6 +182,26 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
                 // refresh the display
                 draw(param);
+
+                // Live error calculator Leo 3/21
+                var scene_num = trial.scene_num;
+
+                var centered1 = param + 180 - scene_num;
+                if (centered1 < 0) {
+                    fixedResponse1 = centered1 + 360;
+                } else if (centered1 > 360) {
+                    fixedResponse1 = centered1 - 360;
+                } else {
+                    fixedResponse1 = centered1;
+                }
+                var live_error = fixedResponse1 - 180;
+
+                // Push live errors to the array Leo 3/25
+                if (live_error != live_error_sequence[live_error_sequence.length - 1]) {
+                    live_error_sequence.push(' ' + live_error)
+                    live_scene_num_sequence.push(' ' + param)
+                    console.log(param)
+                }
             }
             document.addEventListener('mousemove', mousemovementevent);
 
@@ -204,11 +228,14 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 // Add trialCount to data record Leo 2/28
                 // add error to data record Leo 3/1
                 // Add block count to data record Leo 3/4
+                // Add error sequence and scene sequence to data record Leo 3/25
                 var trial_data = {
                     "block": blockNum,
                     "trial_num": trialCount,
                     "fix_duration": start_time - fixstart,
                     "rt": response_time,
+                    "error_seq": live_error_sequence,
+                    "scene_seq": live_scene_num_sequence,
                     "error": error,
                     "response": final_angle
                 };
@@ -216,6 +243,11 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 display_element.innerHTML = "";
 
                 document.removeEventListener("click", mouseclickevent);
+
+                // Reset live error and scene sequence arrays Leo 3/25
+                console.log(live_scene_num_sequence)
+                live_error_sequence = []
+                live_scene_num_sequence = []
 
                 // next trial
                 // jsPsych.finishTrial(trial_data);} // need to use end_trial for trial duration Leo 2/21/22
@@ -247,6 +279,11 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
                 // move on to the next trial
                 jsPsych.finishTrial(trial_data);
+
+                // Reset live error and scene sequence arrays Leo 3/25
+                console.log(live_scene_num_sequence)
+                live_error_sequence = []
+                live_scene_num_sequence = []
             };
             document.addEventListener("click", mouseclickevent);
 
@@ -263,14 +300,18 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
             // end trial if trial_duration is set
             // record trial number and error value Leo 3/2
             // Add block count to data record Leo 3/4
+            // Add error sequence and scene sequence to data record Leo 3/25
             if (trial.trial_duration !== null) {
                 trial_data = {
                     "block": blockNum,
                     "trial_num": trialCount,
                     "fix_duration": start_time - fixstart,
                     "rt": "NaN",
+                    "error_seq": live_error_sequence,
+                    "scene_seq": live_scene_num_sequence,
                     "error": "NaN",
                     "response": "NaN"
+
                 }
                 jsPsych.pluginAPI.setTimeout(function() {
                     end_trial(trial_data);

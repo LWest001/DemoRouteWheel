@@ -19,15 +19,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-
-/* make images unselectable to prevent bug where click does not end the trial Leo 3/17 */
-
-img {
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
-    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* make images and textunselectable to prevent bug where click does not end the trial Leo 3/17 */
+
+img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
 }

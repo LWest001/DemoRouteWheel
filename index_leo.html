@@ -48,6 +48,9 @@
     var study_id = jsPsych.data.getURLVariable('STUDY_ID');
     var session_id = jsPsych.data.getURLVariable('SESSION_ID');
 
+    // Use when testing outside of cognition.run
+    // var CONDITION = 1
+
     jsPsych.data.addProperties({
         subject_id: subject_id,
         study_id: study_id,
@@ -107,7 +110,7 @@
     var mask_img = 'stimuli/mask.png'
     images.push(mask_img)
     var inst_img = [];
-    for (i = 1; i <= 6; i++) {
+    for (i = 1; i <= 7; i++) {
         inst_img.push('stimuli/instruction/Slide' + (i) + '.jpeg');
     }
     images.push(inst_img)
@@ -119,7 +122,7 @@
         type: 'html-button-response',
         stimulus: function() {
             var html =
-                '<p area-selected="font-size:15px;"> Press Agree to participate in the experiment.</p>' +
+                '<p area-selected="font-size:15px;" class="unselectable"> Press Agree to participate in the experiment.</p>' +
                 '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
         },
@@ -134,12 +137,13 @@
     var general_instruction = {
         type: 'instructions',
         pages: [
-            '<img src="' + inst_img[0] + '" style="width:90%">',
-            '<img src="' + inst_img[1] + '" style="width:90%">',
-            '<img src="' + inst_img[2] + '" style="width:90%">',
-            '<img src="' + inst_img[3] + '" style="width:90%">',
-            '<img src="' + inst_img[4] + '" style="width:90%">',
-            '<img src="' + inst_img[5] + '" style="width:90%">'
+            '<img draggable="false" src="' + inst_img[0] + '" style="width:90%">',
+            '<img draggable="false" src="' + inst_img[1] + '" style="width:90%">',
+            '<img draggable="false" src="' + inst_img[2] + '" style="width:90%">',
+            '<img draggable="false" src="' + inst_img[3] + '" style="width:90%">',
+            '<img draggable="false" src="' + inst_img[4] + '" style="width:90%">',
+            '<img draggable="false" src="' + inst_img[5] + '" style="width:90%">',
+            '<img draggable="false" src="' + inst_img[6] + '" style="width:90%">'
         ],
         show_clickable_nav: true,
         show_page_number: true,
@@ -151,7 +155,7 @@
     // * delayed estimation task * //      
     var fixation = {
         type: 'html-keyboard-response',
-        stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;">+</div></div>',
+        stimulus: html = '<div class="unselectable" id="basic_arena"><div class="unselectable" id="full_arena" style="font-size:24px;">+</div></div>',
         choices: jsPsych.NO_KEYS,
         trial_duration: 1500,
         data: {
@@ -168,7 +172,7 @@
     var target_display = {
         type: 'html-keyboard-response',
         stimulus: function() {
-            var html = '<div id="basic_arena"><div id="full_arena""><img src="' +
+            var html = '<div class="unselectable" id="basic_arena"><div id="full_arena""><img draggable="false" src="' +
                 jsPsych.timelineVariable('img_path', true) + ' "></div></div>';
             return html;
         },
@@ -183,7 +187,7 @@
     //add mask phase to trial Leo 12/21/2021
     var mask = {
         type: 'html-keyboard-response',
-        stimulus: html = '<div id="basic_arena"><div id="full_arena" style="font-size:24px;"><img src="stimuli/mask.png"></img></div></div>',
+        stimulus: html = '<div class="unselectable" id="basic_arena"><div id="full_arena" style="font-size:24px;"><img draggable="false" src="stimuli/mask.png"></img></div></div>',
         choices: jsPsych.NO_KEYS,
         trial_duration: 250,
         data: {
@@ -220,7 +224,7 @@
     // prac2main
     var prac2main = {
         type: 'html-button-response',
-        stimulus: html = '<p style="color: black; font-size: 20px;">' +
+        stimulus: html = '<p class="unselectable" style="color: black; font-size: 20px;">' +
             'Practice trials are done!</br>' +
             'Click the <i>Start</i> button to start the main experiment.</br></br>' +
             //Change to say 144 trials with breaks every 48 trials for the pilot Leo Westebbe 12/17/2021
@@ -251,10 +255,11 @@
         if (b < 2) {
             this['main_block_end' + (b + 1)] = {
                     type: 'html-button-response',
-                    stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
-                        'Take a 1-3 minute break, then press the button to proceed.</div>' +
-                        '<div style="font-size:20px;" id="clock"></div>' +
-                        '<div style="font-size:20px;color:red;" id="breakPrompt"></div>',
+                    stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                        'After a 1 minute break, you may press the button to proceed.' +
+                        'Please do not take a break longer than 3 minutes.</div>' +
+                        '<div class="unselectable" style="font-size:20px;" id="clock"></div>' +
+                        '<div class="unselectable" style="font-size:20px;color:red;" id="breakPrompt"></div>',
                     choices: ['Proceed'],
                     //timer loads with this screen Leo 12/23/2021
                     on_load: function() {
@@ -289,7 +294,7 @@
         } else {
             this['main_block_end' + (b + 1)] = {
                 type: 'html-button-response',
-                stimulus: '<div style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
                     'Press the button to save data and move on to the end of the experiment.<br></div>',
                 choices: ['Save data'],
                 data: {
