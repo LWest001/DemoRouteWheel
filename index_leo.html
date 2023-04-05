@@ -44,26 +44,39 @@
 <script>
     // Add Prolific info recorder Leo 12/22/2021
     // capture info from Prolific
+    /*
+
+    Disabled for demo version
+
     var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
     var study_id = jsPsych.data.getURLVariable('STUDY_ID');
     var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+    */
 
     // Use when testing outside of cognition.run
     var CONDITION = 6
+
+    /*
+
+    Disabled for demo version
 
     jsPsych.data.addProperties({
         subject_id: subject_id,
         study_id: study_id,
         session_id: session_id
     });
+
+    */
+
     // * image host * //
     // change the host to the parent folder so it can switch sub-folder by Bill 2/10/2022
-    var img_host = 'https://raw.githubusercontent.com/YibiaoLiang/onRoute/3-part-pilot/';
+    var img_host = 'https://raw.githubusercontent.com/LWest001/DemoRouteWheel/main/';
 
     // Add trial counter variable Leo 2/28
     var trialCount = 0;
     var totalTrials = 0;
     var blockNum = 0;
+
     // add block counter Leo 2/28
     function countBlocks() {
         if (totalTrials > 10 && totalTrials <= 10 + n_bin_onWheel * n_repetition) {
@@ -88,7 +101,7 @@
     var n_block = 5;
     // add prac_or_main Leo 3/14/22
     var p_mat = make_condition(n_bin_onWheel, n_repetition, img_host, prac);
-    var p_mat = p_mat[0].slice(0, 10); // only 10 trials for practicing
+    var p_mat = p_mat[0].slice(0, 3); // only 10 trials for practicing
     var e_mat = make_condition(n_bin_onWheel, n_repetition, img_host, main);
 
     //* preload stimuli *//      
@@ -333,7 +346,7 @@
             xhr.onload = function () {
                 if (xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
-                    
+
                 }
             };
             xhr.send(JSON.stringify(data));
@@ -410,7 +423,11 @@
         timeline: timeline,
         preload_images: images,
         on_finish: function () {
-            window.location = "https://app.prolific.co/submissions/complete?cc=106F945D"
+            /* 
+            Not needed for Demo version.
+            window.location = "https://app.prolific.co/submissions/complete?cc=106F945D" 
+            
+            */
         }
     });
 </script>

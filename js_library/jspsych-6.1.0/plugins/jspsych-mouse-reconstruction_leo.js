@@ -254,16 +254,6 @@ jsPsych.plugins["mouse-reconstruction"] = (function () {
 
         display_element.innerHTML = "";
 
-        // Add trialCount to data record Leo 2/28
-        var trial_data = {
-          fix_duration: start_time - fixstart,
-          trial_num: trialCount,
-          rt: response_time,
-          response: final_angle,
-        };
-
-        display_element.innerHTML = "";
-
         document.removeEventListener("click", mouseclickevent);
 
         // next trial
@@ -272,25 +262,6 @@ jsPsych.plugins["mouse-reconstruction"] = (function () {
           end_trial(trial_data);
         }
       };
-      // add in the function to end trial when it is time by Bill 12/12/2021
-      function end_trial(data) {
-        // kill any remaining setTimeout handlers
-        jsPsych.pluginAPI.clearAllTimeouts();
-
-        // kill keyboard listeners
-        if (typeof keyboardListener !== "undefined") {
-          jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-        }
-        // kill mouse listeners
-        document.removeEventListener("mousemove", mousemovementevent);
-        document.removeEventListener("click", mouseclickevent);
-
-        // next trial
-        // jsPsych.finishTrial(trial_data);} // need to use end_trial for trial duration Leo 2/21/22
-        if (trial.response_ends_trial) {
-          end_trial(trial_data);
-        }
-      }
 
       // add in the function to end trial when it is time by Bill 12/12/2021
       function end_trial(data) {
@@ -329,14 +300,12 @@ jsPsych.plugins["mouse-reconstruction"] = (function () {
       // end trial if trial_duration is set
       // record trial number and error value Leo 3/2
       // Add block count to data record Leo 3/4
-      // Add error sequence and scene sequence to data record Leo 3/25
       if (trial.trial_duration !== null) {
         trial_data = {
           block: blockNum,
           trial_num: trialCount,
           fix_duration: start_time - fixstart,
           rt: "NaN",
-
           error: "NaN",
           response: "NaN",
         };
