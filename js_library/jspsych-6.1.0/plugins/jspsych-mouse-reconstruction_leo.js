@@ -135,6 +135,8 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
                 jsPsych.pluginAPI.setTimeout(run_trial, fix_dur - diff);
             }
         }
+        // increment trial counter for each trial Leo 2/28
+        trialCount += 1
 
         // Run adjustment trial (draw images according to mouse position)
         function run_trial() {
@@ -242,6 +244,39 @@ jsPsych.plugins['mouse-reconstruction'] = (function() {
 
                 display_element.innerHTML = "";
 
+                    // Add trialCount to data record Leo 2/28
+                    // add difference to data record Leo 3/1
+                    var trial_data = {
+                        "fix_duration": start_time - fixstart,
+                        "trial_num": trialCount,
+                        "rt": response_time,
+                        "difference": difference,
+                        "response": final_angle
+                    };
+
+                    display_element.innerHTML = "";
+
+                    document.removeEventListener("click", mouseclickevent);
+
+                    // next trial
+                    // jsPsych.finishTrial(trial_data);} // need to use end_trial for trial duration Leo 2/21/22
+                    if (trial.response_ends_trial) {
+                        end_trial(trial_data);
+                    }
+
+                }
+                // add in the function to end trial when it is time by Bill 12/12/2021
+            function end_trial(data) {
+
+                // kill any remaining setTimeout handlers
+                jsPsych.pluginAPI.clearAllTimeouts();
+
+                // kill keyboard listeners
+                if (typeof keyboardListener !== 'undefined') {
+                    jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+                }
+                // kill mouse listeners
+                document.removeEventListener('mousemove', mousemovementevent);
                 document.removeEventListener("click", mouseclickevent);
 
                 // Reset live error and scene sequence arrays Leo 3/25
