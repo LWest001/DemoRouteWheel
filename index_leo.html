@@ -49,7 +49,7 @@
     var session_id = jsPsych.data.getURLVariable('SESSION_ID');
 
     // Use when testing outside of cognition.run
-    // var CONDITION = 1
+    var CONDITION = 1
 
     jsPsych.data.addProperties({
         subject_id: subject_id,
@@ -333,7 +333,7 @@
             xhr.onload = function () {
                 if (xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
-                    console.log(response.success);
+                    
                 }
             };
             xhr.send(JSON.stringify(data));
@@ -375,7 +375,7 @@
 
     // ********** timeline fill up ********** // 
     timeline = [];
-    timeline.push(consent_page);
+    // timeline.push(consent_page);
     timeline.push({
         type: 'fullscreen',
         fullscreen_mode: true
