@@ -71,22 +71,20 @@
     // * image host * //
     var img_host = 'https://raw.githubusercontent.com/LWest001/DemoRouteWheel/main/';
 
-    // Global variables used in data recording
-    var trialCount = 0;
-    var blockNum = 0;
+    // * Global variables used in data recording * //
+    var trial_count = 0;
+    var current_block = 0;
 
-    // * condition set up * //        
-    //change n_bin_onWheel to 12, n_repetition to 4, for 48 trials. Leo 12/22/2021
+    // * condition set up * //
+    // * (number of trials = n_bin_onWheel * n_repetiton) * //
     var n_bin_onWheel = 3;
     var n_repetition = 1;
-    var numberOfBlocks = 4; //including practice block
-    // add prac_or_main Leo 3/14/22
-    var p_mat = make_condition(n_bin_onWheel, n_repetition, img_host, true);
-    var p_mat = p_mat[0].slice(0, 3); // only 10 trials for practicing
-    var e_mat = make_condition(n_bin_onWheel, n_repetition, img_host, false);
+    var total_blocks = 4; // including practice block
+    var practice_condition = make_condition(n_bin_onWheel, n_repetition, img_host, true);
+    practice_condition = practice_condition[0].slice(0, 3); // (slice(first trial, total number of practice trials))
+    var experimental_condition = make_condition(n_bin_onWheel, n_repetition, img_host, false);
 
-    //* preload stimuli *//      
-    // Set program to preload all stimuli before consent page Leo 3/17/22 
+    //* preload stimuli *//
     var images = []
     var folders = ['ISC2/', 'OLM7/', 'JMP3/', 'STB9/']
     for (f = 0; f < folders.length; f++) {
@@ -103,11 +101,11 @@
     images.push(handle_nobar)
     var mask_img = 'stimuli/mask.png'
     images.push(mask_img)
-    var inst_img = [];
+    var instructions_images = [];
     for (i = 1; i <= 7; i++) {
-        inst_img.push('stimuli/instruction/Slide' + (i) + '.jpeg');
+        instructions_images.push('stimuli/instruction/Slide' + (i) + '.jpeg');
     }
-    images.push(inst_img)
+    images.push(instructions_images)
 
 
     // ********** displays ********** //
@@ -131,13 +129,13 @@
     var general_instruction = {
         type: 'instructions',
         pages: [
-            '<img draggable="false" src="' + inst_img[0] + '" style="width:90%">',
-            '<img draggable="false" src="' + inst_img[1] + '" style="width:90%">',
-            '<img draggable="false" src="' + inst_img[2] + '" style="width:90%">',
-            '<img draggable="false" src="' + inst_img[3] + '" style="width:90%">',
-            '<img draggable="false" src="' + inst_img[4] + '" style="width:90%">',
-            '<img draggable="false" src="' + inst_img[5] + '" style="width:90%">',
-            '<img draggable="false" src="' + inst_img[6] + '" style="width:90%">'
+            '<img draggable="false" src="' + instructions_images[0] + '" style="width:90%">',
+            '<img draggable="false" src="' + instructions_images[1] + '" style="width:90%">',
+            '<img draggable="false" src="' + instructions_images[2] + '" style="width:90%">',
+            '<img draggable="false" src="' + instructions_images[3] + '" style="width:90%">',
+            '<img draggable="false" src="' + instructions_images[4] + '" style="width:90%">',
+            '<img draggable="false" src="' + instructions_images[5] + '" style="width:90%">',
+            '<img draggable="false" src="' + instructions_images[6] + '" style="width:90%">'
         ],
         show_clickable_nav: true,
         show_page_number: true,
@@ -155,10 +153,8 @@
         data: {
             disp_type: 'fixation'
         },
-        // increment trial counter for each trial Leo 2/28
-        // increment total trial counter for each trial, for block counter Leo 3/4
         on_load: function () {
-            trialCount ++
+            trial_count++
         }
     }
     var target_display = {
@@ -176,7 +172,6 @@
         }
     }
 
-    //add mask phase to trial Leo 12/21/2021
     var mask = {
         type: 'html-keyboard-response',
         stimulus: html = '<div class="unselectable" id="basic_arena"><div id="full_arena" style="font-size:24px;"><img draggable="false" src="stimuli/mask.png"></img></div></div>',
@@ -186,10 +181,11 @@
             disp_type: 'mask'
         }
     }
+
     var adjustment_display = {
         type: 'mouse-reconstruction',
         div_name: 'full_arena',
-        starting_value: 360, // grey rectangular (I put grey image as 360.webp in each wheel path)
+        starting_value: 360, // grey rectangle
         wheel_path: jsPsych.timelineVariable('wheel_path'),
         scene_num: jsPsych.timelineVariable('scene_num'),
         image_size: 'height: 256px',
@@ -205,11 +201,10 @@
     }
 
     // ******* timeline components ******* // 
-    // practice  
-    // add mask to timeline for practice and main Leo 12/21/2021
+    // * practice * //
     var memory_prac = {
         timeline: [fixation, target_display, mask, adjustment_display],
-        timeline_variables: p_mat,
+        timeline_variables: practice_condition,
         randomize_order: true,
     }
 
@@ -220,34 +215,35 @@
             'Practice trials are done!</br>' +
             'Click the <i>Start</i> button to start the main experiment.</br></br>' +
             //Change to say 144 trials with breaks every 48 trials for the pilot Leo Westebbe 12/17/2021
-            'The main experiment consists of ' + (n_bin_onWheel * n_repetition * (numberOfBlocks - 1)) + ' trials.</br>' +
+            'The main experiment consists of ' + (n_bin_onWheel * n_repetition * (total_blocks - 1)) + ' trials.</br>' +
             'There will be a short break every ' + (n_bin_onWheel * n_repetition) + ' trials.',
         choices: ['Start'],
         data: {
             disp_type: 'start-mainExp'
         },
         on_finish: function () {
-            trialCount = 0
-            blockNum++
+            trial_count = 0
+            current_block++
         }
     }
 
     // main        
-    for (b = 0; b <= numberOfBlocks; b++) {
-        this['memory_main' + (b + 1)] = {
+    for (block = 0; block < total_blocks - 1; block++) {
+
+        this['memory_main' + (block + 1)] = {
             timeline: [fixation, target_display, mask, adjustment_display],
-            timeline_variables: e_mat[b],
+            timeline_variables: experimental_condition[block],
             randomize_order: true
         }
     }
     //add Clock for break and adjust break language 12/23/2021
-    /* change for condition to numberOfBlocks - 2 to accomodate final block
+    /* change for condition to total_blocks - 2 to accomodate final block
     create if statement for 2 types of main_block_end screens*/
-    for (b = 0; b <= numberOfBlocks - 2; b++) {
-        if (b < 2) {
-            this['main_block_end' + (b + 1)] = {
+    for (block = 0; block < total_blocks - 1; block++) {
+        if (block < 2) {
+            this['main_block_end' + (block + 1)] = {
                 type: 'html-button-response',
-                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (block + 1) + ' is done!<br><br>' +
                     'After a 1 minute break, you may press the button to proceed.' +
                     'Please do not take a break longer than 3 minutes.</div>' +
                     '<div class="unselectable" style="font-size:20px;" id="clock"></div>' +
@@ -278,15 +274,15 @@
                 },
                 // Reset trial counter Leo 3/1
                 on_finish: function () {
-                    trialCount = 0
-                    blockNum++
+                    trial_count = 0
+                    current_block++
                 }
             }
             // move final main_block_end inside of if statement
         } else {
-            this['main_block_end' + (b + 1)] = {
+            this['main_block_end' + (block + 1)] = {
                 type: 'html-button-response',
-                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (block + 1) + ' is done!<br><br>' +
                     'Press the button to save data and move on to the end of the experiment.<br></div>',
                 choices: ['Save data'],
                 data: {
@@ -294,7 +290,7 @@
                 },
                 // Reset trial counter Leo 3/1
                 on_finish: function () {
-                    trialCount = 0
+                    trial_count = 0
                 }
             }
         }
@@ -316,7 +312,7 @@
                 repo: "sceneWheel_categoryLearning_200ms",
                 data: jsPsych.data.get().values(),
                 interaction_data: jsPsych.data.getInteractionData().values(),
-                exp_condition: e_mat,
+                exp_condition: experimental_condition,
                 current_url: window.location.href
             }
 
@@ -382,7 +378,7 @@
     timeline.push(memory_prac);
     timeline.push(prac2main);
     //change block counter to b<3 so there are 3 blocks Leo 12/22/2021
-    for (b = 0; b < 3; b++) {
+    for (b = 0; b < total_blocks - 1; b++) {
         timeline.push(eval('memory_main' + (b + 1)));
         timeline.push(eval('main_block_end' + (b + 1)));
     }

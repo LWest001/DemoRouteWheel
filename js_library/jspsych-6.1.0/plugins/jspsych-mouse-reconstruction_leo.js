@@ -136,8 +136,6 @@ jsPsych.plugins["mouse-reconstruction"] = (function () {
         jsPsych.pluginAPI.setTimeout(run_trial, fix_dur - diff);
       }
     }
-    // increment trial counter for each trial Leo 2/28
-    trialCount += 1;
 
     // Run adjustment trial (draw images according to mouse position)
     function run_trial() {
@@ -239,13 +237,13 @@ jsPsych.plugins["mouse-reconstruction"] = (function () {
         }
         var error = fixedResponse - 180;
 
-        // Add trialCount to data record Leo 2/28
+        // Add trial_count to data record Leo 2/28
         // add error to data record Leo 3/1
         // Add block count to data record Leo 3/4
         // Add error sequence and scene sequence to data record Leo 3/25
         var trial_data = {
-          block: blockNum,
-          trial_num: trialCount,
+          block: current_block,
+          trial_num: trial_count,
           fix_duration: start_time - fixstart,
           rt: response_time,
           error: error,
@@ -302,8 +300,8 @@ jsPsych.plugins["mouse-reconstruction"] = (function () {
       // Add block count to data record Leo 3/4
       if (trial.trial_duration !== null) {
         trial_data = {
-          block: blockNum,
-          trial_num: trialCount,
+          block: current_block,
+          trial_num: trial_count,
           fix_duration: start_time - fixstart,
           rt: "NaN",
           error: "NaN",
