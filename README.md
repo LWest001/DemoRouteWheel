@@ -1,2 +1,3 @@
-# onRoute
-This is the folder for the on Route expeirment, it include stimuli and the experiment script
+#Demo Route Wheel project
+
+This is the demo version of my 2022 undergraduate research project.

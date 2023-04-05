@@ -17,7 +17,7 @@
             align-items: center;
             /* border: 1px solid grey; */
         }
-        
+
         #full_arena {
             position: absolute;
             width: 100%;
@@ -120,7 +120,7 @@
     // * consent form * //
     var consent_page = {
         type: 'html-button-response',
-        stimulus: function() {
+        stimulus: function () {
             var html =
                 '<p area-selected="font-size:15px;" class="unselectable"> Press Agree to participate in the experiment.</p>' +
                 '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
@@ -163,7 +163,7 @@
         },
         // increment trial counter for each trial Leo 2/28
         // increment total trial counter for each trial, for block counter Leo 3/4
-        on_load: function() {
+        on_load: function () {
             trialCount += 1
             totalTrials += 1
             countBlocks()
@@ -171,7 +171,7 @@
     }
     var target_display = {
         type: 'html-keyboard-response',
-        stimulus: function() {
+        stimulus: function () {
             var html = '<div class="unselectable" id="basic_arena"><div id="full_arena""><img draggable="false" src="' +
                 jsPsych.timelineVariable('img_path', true) + ' "></div></div>';
             return html;
@@ -234,7 +234,7 @@
         data: {
             disp_type: 'start-mainExp'
         },
-        on_finish: function() {
+        on_finish: function () {
             trialCount = 0
         }
     }
@@ -253,42 +253,42 @@
     for (b = 0; b < n_block - 2; b++) {
         if (b < 2) {
             this['main_block_end' + (b + 1)] = {
-                    type: 'html-button-response',
-                    stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
-                        'After a 1 minute break, you may press the button to proceed.' +
-                        'Please do not take a break longer than 3 minutes.</div>' +
-                        '<div class="unselectable" style="font-size:20px;" id="clock"></div>' +
-                        '<div class="unselectable" style="font-size:20px;color:red;" id="breakPrompt"></div>',
-                    choices: ['Proceed'],
-                    //timer loads with this screen Leo 12/23/2021
-                    on_load: function() {
-                        var wait_time = 01 * 60 * 1000; // in milliseconds
-                        var start_time = performance.now();
-                        document.querySelector('button').disabled = true;
-                        var interval = setInterval(function() {
-                            var time_left = wait_time - (performance.now() - start_time);
-                            var minutes = Math.floor(time_left / 1000 / 60);
-                            var seconds = Math.floor((time_left - minutes * 1000 * 60) / 1000);
-                            var seconds_str = seconds.toString().padStart(2, '0');
-                            document.querySelector('#clock').innerHTML = minutes + ':' + seconds_str
-                            if (time_left <= 0) {
-                                document.querySelector('#clock').innerHTML = "0:00";
-                                document.querySelector('button').disabled = false;
-                                document.getElementById("clock").style.color = "red";
-                                document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
-                                clearInterval(interval);
-                            }
-                        }, 250)
-                    },
-                    data: {
-                        disp_type: 'prac_block_done'
-                    },
-                    // Reset trial counter Leo 3/1
-                    on_finish: function() {
-                        trialCount = 0
-                    }
+                type: 'html-button-response',
+                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (b + 1) + ' is done!<br><br>' +
+                    'After a 1 minute break, you may press the button to proceed.' +
+                    'Please do not take a break longer than 3 minutes.</div>' +
+                    '<div class="unselectable" style="font-size:20px;" id="clock"></div>' +
+                    '<div class="unselectable" style="font-size:20px;color:red;" id="breakPrompt"></div>',
+                choices: ['Proceed'],
+                //timer loads with this screen Leo 12/23/2021
+                on_load: function () {
+                    var wait_time = 01 * 60 * 1000; // in milliseconds
+                    var start_time = performance.now();
+                    document.querySelector('button').disabled = true;
+                    var interval = setInterval(function () {
+                        var time_left = wait_time - (performance.now() - start_time);
+                        var minutes = Math.floor(time_left / 1000 / 60);
+                        var seconds = Math.floor((time_left - minutes * 1000 * 60) / 1000);
+                        var seconds_str = seconds.toString().padStart(2, '0');
+                        document.querySelector('#clock').innerHTML = minutes + ':' + seconds_str
+                        if (time_left <= 0) {
+                            document.querySelector('#clock').innerHTML = "0:00";
+                            document.querySelector('button').disabled = false;
+                            document.getElementById("clock").style.color = "red";
+                            document.getElementById("breakPrompt").innerHTML = "Please press the button now to proceed to the next block.";
+                            clearInterval(interval);
+                        }
+                    }, 250)
+                },
+                data: {
+                    disp_type: 'prac_block_done'
+                },
+                // Reset trial counter Leo 3/1
+                on_finish: function () {
+                    trialCount = 0
                 }
-                // move final main_block_end inside of if statement
+            }
+            // move final main_block_end inside of if statement
         } else {
             this['main_block_end' + (b + 1)] = {
                 type: 'html-button-response',
@@ -299,7 +299,7 @@
                     disp_type: 'prac_block_done'
                 },
                 // Reset trial counter Leo 3/1
-                on_finish: function() {
+                on_finish: function () {
                     trialCount = 0
                 }
             }
@@ -315,7 +315,7 @@
         data: { // create confirmation code with data saving
             conf_code: Math.floor(1000 + Math.random() * 9000)
         },
-        on_finish: function() {
+        on_finish: function () {
             // get data values
             var data = {
                 experiment: "sceneWheel_categoryLearning_200ms",
@@ -330,7 +330,7 @@
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'https://macklab-savejs.netlify.app/api/savejs');
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
                     console.log(response.success);
@@ -361,7 +361,7 @@
     // debriefing letter
     var debrief_page = {
         type: 'html-keyboard-response',
-        stimulus: function() {
+        stimulus: function () {
             var html =
                 '<p area-selected="font-size:15px;"> Thank you for participating! </br> Once checking the defriefing letter and questions, you can leave this page.</p>' +
                 '<embed src="stimuli/debriefing.pdf" style="width:80vw; height:70vh;"></embed>'
@@ -409,7 +409,7 @@
     jsPsych.init({
         timeline: timeline,
         preload_images: images,
-        on_finish: function() {
+        on_finish: function () {
             window.location = "https://app.prolific.co/submissions/complete?cc=106F945D"
         }
     });
