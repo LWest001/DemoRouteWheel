@@ -42,8 +42,7 @@
 <body></body>
 
 <script>
-    // Add Prolific info recorder Leo 12/22/2021
-    // capture info from Prolific
+    // * capture info from Prolific * //
     /*
 
     Disabled for demo version
@@ -80,9 +79,9 @@
     var n_bin_onWheel = 3;
     var n_repetition = 1;
     var total_blocks = 4; // including practice block
-    var practice_condition = make_condition(n_bin_onWheel, n_repetition, img_host, true);
+    var practice_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
     practice_condition = practice_condition[0].slice(0, 3); // (slice(first trial, total number of practice trials))
-    var experimental_condition = make_condition(n_bin_onWheel, n_repetition, img_host, false);
+    var experimental_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
 
     //* preload stimuli *//
     var images = []
@@ -94,7 +93,6 @@
         }
     }
 
-    // create mask_img for preloading Leo 12/21/2021
     var handle_bar = 'stimuli/handle_wheel.png';
     images.push(handle_bar)
     var handle_nobar = 'stimuli/noBar_wheel.png';
@@ -201,15 +199,15 @@
     }
 
     // ******* timeline components ******* // 
-    // * practice * //
+    // * Set up practice block * //
     var memory_prac = {
         timeline: [fixation, target_display, mask, adjustment_display],
         timeline_variables: practice_condition,
         randomize_order: true,
     }
 
-    // prac2main
-    var prac2main = {
+    // * End of practice block scren * //
+    var prac_block_end = {
         type: 'html-button-response',
         stimulus: html = '<p class="unselectable" style="color: black; font-size: 20px;">' +
             'Practice trials are done!</br>' +
@@ -227,31 +225,34 @@
         }
     }
 
-    // main        
-    for (block = 0; block < total_blocks - 1; block++) {
+    // * Set up main blocks * //
+    for (block = 1; block < total_blocks; block++) {
 
-        this['memory_main' + (block + 1)] = {
+        this['memory_main' + (block)] = {
             timeline: [fixation, target_display, mask, adjustment_display],
             timeline_variables: experimental_condition[block],
             randomize_order: true
         }
     }
-    //add Clock for break and adjust break language 12/23/2021
-    /* change for condition to total_blocks - 2 to accomodate final block
-    create if statement for 2 types of main_block_end screens*/
-    for (block = 0; block < total_blocks - 1; block++) {
-        if (block < 2) {
-            this['main_block_end' + (block + 1)] = {
+
+    // * Main block ending screens * //
+    for (block = 1; block < total_blocks; block++) {
+        // Non-final blocks
+        if (block < total_blocks - 1) {
+            // Wait time variables
+            var wait_time = 01 * 5 * 1000; // in milliseconds
+            var wait_time_string = wait_time >= 1 * 60 * 1000 ? (wait_time / 1000 / 60) + ' minute' : (wait_time / 1000) + ' second'
+            this['main_block_end' + (block)] = {
                 type: 'html-button-response',
-                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (block + 1) + ' is done!<br><br>' +
-                    'After a 1 minute break, you may press the button to proceed.' +
+                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (block) + ' is done!<br><br>' +
+                    'After a ' + wait_time_string + ' break, you may press the button to proceed. ' +
                     'Please do not take a break longer than 3 minutes.</div>' +
                     '<div class="unselectable" style="font-size:20px;" id="clock"></div>' +
                     '<div class="unselectable" style="font-size:20px;color:red;" id="breakPrompt"></div>',
                 choices: ['Proceed'],
-                //timer loads with this screen Leo 12/23/2021
+
+                // * Load timer * //
                 on_load: function () {
-                    var wait_time = 01 * 5 * 1000; // in milliseconds
                     var start_time = performance.now();
                     document.querySelector('button').disabled = true;
                     var interval = setInterval(function () {
@@ -272,17 +273,17 @@
                 data: {
                     disp_type: 'prac_block_done'
                 },
-                // Reset trial counter Leo 3/1
+
                 on_finish: function () {
                     trial_count = 0
                     current_block++
                 }
             }
-            // move final main_block_end inside of if statement
         } else {
-            this['main_block_end' + (block + 1)] = {
+            // Final block
+            this['main_block_end' + (block)] = {
                 type: 'html-button-response',
-                stimulus: '<div class="unselectable" style="font-size:20px;">Block ' + (block + 1) + ' is done!<br><br>' +
+                stimulus: '<div class="unselectable" style="font-size:20px;">Final block is done!<br><br>' +
                     'Press the button to save data and move on to the end of the experiment.<br></div>',
                 choices: ['Save data'],
                 data: {
@@ -315,6 +316,7 @@
                 exp_condition: experimental_condition,
                 current_url: window.location.href
             }
+            console.log(data)
 
             // send data to savejs
             /*
@@ -376,7 +378,7 @@
     });
     timeline.push(general_instruction);
     timeline.push(memory_prac);
-    timeline.push(prac2main);
+    timeline.push(prac_block_end);
     //change block counter to b<3 so there are 3 blocks Leo 12/22/2021
     for (b = 0; b < total_blocks - 1; b++) {
         timeline.push(eval('memory_main' + (b + 1)));
