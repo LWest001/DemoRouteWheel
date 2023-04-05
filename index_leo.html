@@ -90,19 +90,15 @@
         }
     }
 
-    // Make practice variable so that practice uses separate route Leo 3/14
-    var prac = '00';
-    var main = '01';
-
     // * condition set up * //        
     //change n_bin_onWheel to 12, n_repetition to 4, for 48 trials. Leo 12/22/2021
     var n_bin_onWheel = 12;
     var n_repetition = 4;
     var n_block = 5;
     // add prac_or_main Leo 3/14/22
-    var p_mat = make_condition(n_bin_onWheel, n_repetition, img_host, prac);
+    var p_mat = make_condition(n_bin_onWheel, n_repetition, img_host, true);
     var p_mat = p_mat[0].slice(0, 3); // only 10 trials for practicing
-    var e_mat = make_condition(n_bin_onWheel, n_repetition, img_host, main);
+    var e_mat = make_condition(n_bin_onWheel, n_repetition, img_host, false);
 
     //* preload stimuli *//      
     // Set program to preload all stimuli before consent page Leo 3/17/22 
@@ -231,7 +227,10 @@
     var memory_prac = {
         timeline: [fixation, target_display, mask, adjustment_display],
         timeline_variables: p_mat,
-        randomize_order: true
+        randomize_order: true,
+        on_finish: function () {
+            jsPsych.data.displayData('csv');
+        }
     }
 
     // prac2main

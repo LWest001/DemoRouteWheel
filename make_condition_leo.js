@@ -5,31 +5,28 @@
 // *
 
 // Add section parameter so that practice uses ISC2 Leo 3/14/22
-function make_condition(n_bin_onWheel, n_repetition, img_host, section) {
+function make_condition(
+  n_bin_onWheel,
+  n_repetition,
+  img_host,
+  isPracticeBlock
+) {
   // make empty condition
   var basic_condition = [];
 
   // put in the route subfolder by Bill 2/10/2022
-  // Remove shuffling, replace with 6 counterbalanced conditions, and a practice condition Leo 3/14/22
-  var route = [];
+  // Remove shuffling, replace with 6 counterbalanced conditions, and a isPcondition Leo 3/14/22
+  var conditions = {
+    practice: ["ISC2/"],
+    1: ["OLM7/", "JMP3/", "STB9/"],
+    2: ["OLM7/", "STB9/", "JMP3/"],
+    3: ["JMP3/", "STB9/", "OLM7/"],
+    4: ["JMP3/", "OLM7/", "STB9/"],
+    5: ["STB9/", "OLM7/", "JMP3/"],
+    6: ["STB9/", "JMP3/", "OLM7/"],
+  };
 
-  if (section == 00) {
-    route = ["ISC2/"];
-  } else {
-    if (CONDITION == 1) {
-      route = ["OLM7/", "JMP3/", "STB9/"];
-    } else if (CONDITION == 2) {
-      route = ["OLM7/", "STB9/", "JMP3/"];
-    } else if (CONDITION == 3) {
-      route = ["JMP3/", "STB9/", "OLM7/"];
-    } else if (CONDITION == 4) {
-      route = ["JMP3/", "OLM7/", "STB9/"];
-    } else if (CONDITION == 5) {
-      route = ["STB9/", "OLM7/", "JMP3/"];
-    } else {
-      route = ["STB9/", "JMP3/", "OLM7/"];
-    }
-  }
+  var route = isPracticeBlock ? conditions["practice"] : conditions[CONDITION];
 
   // seed_point on wheel
   var bin_startPoint = [];
