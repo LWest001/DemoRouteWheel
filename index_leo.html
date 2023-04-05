@@ -92,9 +92,9 @@
 
     // * condition set up * //        
     //change n_bin_onWheel to 12, n_repetition to 4, for 48 trials. Leo 12/22/2021
-    var n_bin_onWheel = 12;
-    var n_repetition = 4;
-    var n_block = 5;
+    var n_bin_onWheel = 3;
+    var n_repetition = 1;
+    var numberOfBlocks = 4; //including practice block
     // add prac_or_main Leo 3/14/22
     var p_mat = make_condition(n_bin_onWheel, n_repetition, img_host, true);
     var p_mat = p_mat[0].slice(0, 3); // only 10 trials for practicing
@@ -240,7 +240,7 @@
             'Practice trials are done!</br>' +
             'Click the <i>Start</i> button to start the main experiment.</br></br>' +
             //Change to say 144 trials with breaks every 48 trials for the pilot Leo Westebbe 12/17/2021
-            'The main experiment consists of ' + (n_bin_onWheel * n_repetition * (n_block - 2)) + ' trials.</br>' +
+            'The main experiment consists of ' + (n_bin_onWheel * n_repetition * (numberOfBlocks - 1)) + ' trials.</br>' +
             'There will be a short break every ' + (n_bin_onWheel * n_repetition) + ' trials.',
         choices: ['Start'],
         data: {
@@ -252,7 +252,7 @@
     }
 
     // main        
-    for (b = 0; b < n_block; b++) {
+    for (b = 0; b <= numberOfBlocks; b++) {
         this['memory_main' + (b + 1)] = {
             timeline: [fixation, target_display, mask, adjustment_display],
             timeline_variables: e_mat[b],
@@ -260,9 +260,9 @@
         }
     }
     //add Clock for break and adjust break language 12/23/2021
-    /* change for condition to n_block - 2 to accomodate final block
+    /* change for condition to numberOfBlocks - 2 to accomodate final block
     create if statement for 2 types of main_block_end screens*/
-    for (b = 0; b < n_block - 2; b++) {
+    for (b = 0; b <= numberOfBlocks - 2; b++) {
         if (b < 2) {
             this['main_block_end' + (b + 1)] = {
                 type: 'html-button-response',
@@ -274,7 +274,7 @@
                 choices: ['Proceed'],
                 //timer loads with this screen Leo 12/23/2021
                 on_load: function () {
-                    var wait_time = 01 * 60 * 1000; // in milliseconds
+                    var wait_time = 01 * 5 * 1000; // in milliseconds
                     var start_time = performance.now();
                     document.querySelector('button').disabled = true;
                     var interval = setInterval(function () {
@@ -339,6 +339,9 @@
             }
 
             // send data to savejs
+            /*
+            Disable for non-MackLab experimenters
+            
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'https://macklab-savejs.netlify.app/api/savejs');
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -349,6 +352,7 @@
                 }
             };
             xhr.send(JSON.stringify(data));
+            */
         }
     }
 
