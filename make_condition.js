@@ -53,7 +53,7 @@ function make_condition(n_bin_onWheel, n_repetition, img_host) {
             img_host +
             route[f] +
             ("00000" + (bin_startPoint[b] + shuffled_jitter[rp])).slice(-6) +
-            ".jpg", // img_path is the image for the target, change it to ISC, by Bill 11/23/2021// change to IS2 by Leo 12/2/2021
+            ".jpg",
           route: route[f],
         });
       }

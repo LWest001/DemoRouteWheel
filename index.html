@@ -34,8 +34,9 @@
     <script src='js_library/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js'></script>
     <script src='js_library/jspsych-6.1.0/plugins/jspsych-html-button-response.js'></script>
     <script src='js_library/jspsych-6.1.0/plugins/jspsych-mouse-reconstruction_leo.js'></script>
+    <script src='js_library/jspsych-6.1.0/plugins/jspsych-external-html.js'></script>
     <script src="js_library/underscore-min.js"></script>
-    <script src="make_condition_leo.js"></script>
+    <script src="make_condition.js"></script>
     <link href='js_library/jspsych-6.1.0/css/jspsych.css' rel='stylesheet' type="text/css">
 </head>
 
@@ -67,6 +68,8 @@
 
     */
 
+    var final_data;
+
     // * image host * //
     var img_host = 'https://raw.githubusercontent.com/LWest001/DemoRouteWheel/main/';
 
@@ -78,7 +81,7 @@
     // * (number of trials = n_bin_onWheel * n_repetiton) * //
     var n_bin_onWheel = 3;
     var n_repetition = 1;
-    var total_blocks = 4; // including practice block
+    var total_blocks = 2; // including practice block
     var practice_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
     practice_condition = practice_condition[0].slice(0, 3); // (slice(first trial, total number of practice trials))
     var experimental_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
@@ -121,6 +124,14 @@
             disp_type: 'consent_page'
         }
 
+    }
+
+    // * results * //
+    var results = {
+        type: 'external-html',
+        url: './result.html',
+        force_refresh: true,
+        execute_script: "true",
     }
 
     // * instructions * //
@@ -316,7 +327,21 @@
                 exp_condition: experimental_condition,
                 current_url: window.location.href
             }
-            console.log(data)
+
+            // save data to global object
+            // filter out trials
+            const trials = data.data.filter(
+                (entry) => entry.trial_type === "mouse-reconstruction"
+            );
+
+            // separate by block
+            const responses = {};
+
+            for (let i = 0; i < total_blocks; i++) {
+                responses[i] = trials.filter((trial) => trial.block === i);
+            }
+            
+            final_data = {...responses}
 
             // send data to savejs
             /*
@@ -376,6 +401,7 @@
         type: 'fullscreen',
         fullscreen_mode: true
     });
+    // timeline.push(res ults)
     timeline.push(general_instruction);
     timeline.push(memory_prac);
     timeline.push(prac_block_end);
