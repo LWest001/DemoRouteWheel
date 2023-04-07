@@ -1,0 +1,46 @@
+<div>
+    <h1 id="header"></h1>
+    <img id="response" />
+    <img id="answer" />
+    <button id="prev">Previous block</button>
+    <button id="next">Next block</button>
+
+    <script async defer>
+        let currentBlock = 1
+
+        // DOM Elements
+        const header = document.getElementById("header")
+        const response = document.getElementById("response")
+        const answer = document.getElementById("answer")
+        const prev = document.getElementById("prev")
+        const next = document.getElementById("next")
+
+        // set header
+        function setHeader() {
+            header.innerHTML = "Block " + currentBlock
+        }
+        setHeader()
+
+        function setButtonStates() {
+            currentBlock === 1 ? prev.disabled = true : prev.disabled = false
+            currentBlock === total_blocks - 1 ? next.disabled = true : next.disabled = false
+        }
+
+        setButtonStates()
+
+        // previous button settings
+        prev.addEventListener('click', () => {
+            currentBlock--
+            setHeader()
+            setButtonStates()
+        })
+
+        next.disabled = currentBlock === total_blocks
+        next.addEventListener('click', () => {
+            currentBlock++
+            setHeader()
+            setButtonStates()
+        })
+
+    </script>
+</div>
