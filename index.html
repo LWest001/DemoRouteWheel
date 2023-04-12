@@ -80,8 +80,8 @@
     // * condition set up * //
     // * (number of trials = n_bin_onWheel * n_repetiton) * //
     var n_bin_onWheel = 3;
-    var n_repetition = 1;
-    var total_blocks = 2; // including practice block
+    var n_repetition = 3;
+    var total_blocks = 4; // including practice block
     var practice_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
     practice_condition = practice_condition[0].slice(0, 3); // (slice(first trial, total number of practice trials))
     var experimental_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
@@ -170,7 +170,7 @@
     var target_display = {
         type: 'html-keyboard-response',
         stimulus: function () {
-            var html = '<div class="unselectable" id="basic_arena"><div id="full_arena""><img draggable="false" src="' +
+            var html = '<div class="unselectable" id="basic_arena"><div id="full_arena""><img draggable="false" class="unselectable" src="' +
                 jsPsych.timelineVariable('img_path', true) + ' "></div></div>';
             return html;
         },
@@ -296,7 +296,7 @@
             this['main_block_end' + (block)] = {
                 type: 'html-button-response',
                 stimulus: '<div class="unselectable" style="font-size:20px;">Final block is done!<br><br>' +
-                    'Press the button to save data and move on to the end of the experiment.<br></div>',
+                    'Press the button to save your data.<br></div>',
                 choices: ['Save data'],
                 data: {
                     disp_type: 'prac_block_done'
@@ -343,55 +343,17 @@
             }
 
             final_data = { ...responses }
-
-            // send data to savejs
-            /*
-            Disable for non-MackLab experimenters
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://macklab-savejs.netlify.app/api/savejs');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function () {
-                if (xhr.status == 200) {
-                    var response = JSON.parse(xhr.responseText);
-
-                }
-            };
-            xhr.send(JSON.stringify(data));
-            */
         }
     }
 
     // demographic page
     var demographic_page = {
         type: 'html-button-response',
-        //remove demographic page Leo Westebbe 12/17/2021
         stimulus: html = '<p style="color: black; font-size: 20px;">' +
-            'To finish this experiment, press the button below.<br>' +
-            'You will be directed back to Prolific. </p>',
-        //'You are done! Now we would like to collect your demographic information.</br>' +
-        //'Click the <b>Demographic questions</b> below to complete the form.</br>' +
-        //'After submitting the form, come back to this page and check out the debriefing letter!</br></br>' +
-        //'<a href="https://redcap.utoronto.ca/surveys/index.php?s=DDT8ME9KFL&study_name=scene_wheel_category_learning_200ms" target="_blank">' +
-        //'Demographic questions </a></br></br></p>',
-        choices: ['Go back to Prolific.'],
+            'To finish this experiment, press the button below.<br>',
+        choices: ['Exit the experiment.'],
         data: {
             disp_type: 'demographic-link'
-        }
-    }
-
-    // debriefing letter
-    var debrief_page = {
-        type: 'html-keyboard-response',
-        stimulus: function () {
-            var html =
-                '<p area-selected="font-size:15px;"> Thank you for participating! </br> Once checking the defriefing letter and questions, you can leave this page.</p>' +
-                '<embed src="stimuli/debriefing.pdf" style="width:80vw; height:70vh;"></embed>'
-            return html;
-        },
-        choices: jsPsych.NO_KEYS,
-        data: {
-            disp_type: 'debriefing_page'
         }
     }
 
@@ -418,12 +380,6 @@
         type: 'fullscreen',
         fullscreen_mode: false
     });
-    //Comment out debrief page Leo Westebbe 12/17/2021
-    //timeline.push(debrief_page);
-    //timeline.push({
-    //    type: 'fullscreen',
-    //    fullscreen_mode: false
-    //});
 
     // ****** Start ***** //
     // add mask_img to preload_images Leo 12/21/2021

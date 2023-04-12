@@ -24,12 +24,24 @@
   margin: auto;
   flex: 1 1 100%;
   width: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .jspsych-content {
   max-width: 95%; /* this is mainly an IE 10-11 fix */
   text-align: center;
   margin: auto; /* this is for overflowing content */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .jspsych-top {
