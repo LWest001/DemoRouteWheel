@@ -80,8 +80,8 @@
     // * condition set up * //
     // * (number of trials = n_bin_onWheel * n_repetiton) * //
     var n_bin_onWheel = 3;
-    var n_repetition = 1;
-    var total_blocks = 2; // including practice block
+    var n_repetition = 3;
+    var total_blocks = 4; // including practice block
     var practice_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
     practice_condition = practice_condition[0].slice(0, 3); // (slice(first trial, total number of practice trials))
     var experimental_condition = make_condition(n_bin_onWheel, n_repetition, img_host);
